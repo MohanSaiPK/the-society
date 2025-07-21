@@ -4,7 +4,7 @@ export const getGatepasses = async (req, res) => {
   try {
     if (req.user.role === "guard") {
       const gatepasses = await Gatepass.find()
-        .populate("user", "name email")
+        .populate("user", "name")
         .sort({ createdAt: -1 });
       res.status(200).json(gatepasses);
     } else {

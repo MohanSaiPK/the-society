@@ -285,6 +285,7 @@ const Dashboard = () => {
                   <th className="py-2 px-4 border">Visitor</th>
                   <th className="py-2 px-4 border">Purpose</th>
                   <th className="py-2 px-4 border">Time</th>
+                  <th className="py-2 px-4 border">Resident Name</th>
                   <th className="py-2 px-4 border">House No</th>
                   <th className="py-2 px-4 border">Status</th>
                   <th className="py-2 px-4 border">Review</th>
@@ -298,6 +299,12 @@ const Dashboard = () => {
                       <td className="py-2 px-4 border">{row.visitor}</td>
                       <td className="py-2 px-4 border">{row.purpose}</td>
                       <td className="py-2 px-4 border">{row.time}</td>
+                      <td className="py-2 px-4 border">
+                        {row.user?.name ||
+                          row.residentName ||
+                          row.resident ||
+                          "-"}
+                      </td>
                       <td className="py-2 px-4 border">{row.houseNo}</td>
                       <td className="py-2 px-4 border text-yellow-600">
                         {row.status}
@@ -398,6 +405,7 @@ const Dashboard = () => {
                     <th className="py-2 px-4 border">Visitor</th>
                     <th className="py-2 px-4 border">Purpose</th>
                     <th className="py-2 px-4 border">Time</th>
+                    <th className="py-2 px-4 border">Resident Name</th>
                     <th className="py-2 px-4 border">House No</th>
                     <th className="py-2 px-4 border">Status</th>
                     <th className="py-2 px-4 border">Comments</th>
@@ -411,6 +419,12 @@ const Dashboard = () => {
                         <td className="py-2 px-4 border">{row.visitor}</td>
                         <td className="py-2 px-4 border">{row.purpose}</td>
                         <td className="py-2 px-4 border">{row.time}</td>
+                        <td className="py-2 px-4 border">
+                          {row.user?.name ||
+                            row.residentName ||
+                            row.resident ||
+                            "-"}
+                        </td>
                         <td className="py-2 px-4 border">{row.houseNo}</td>
                         <td className="py-2 px-4 border text-green-600">
                           {row.status}
@@ -431,6 +445,7 @@ const Dashboard = () => {
                     <th className="py-2 px-4 border">Visitor</th>
                     <th className="py-2 px-4 border">Purpose</th>
                     <th className="py-2 px-4 border">Time</th>
+                    <th className="py-2 px-4 border">Resident Name</th>
                     <th className="py-2 px-4 border">House No</th>
                     <th className="py-2 px-4 border">Status</th>
                     <th className="py-2 px-4 border">Comments</th>
@@ -444,6 +459,12 @@ const Dashboard = () => {
                         <td className="py-2 px-4 border">{row.visitor}</td>
                         <td className="py-2 px-4 border">{row.purpose}</td>
                         <td className="py-2 px-4 border">{row.time}</td>
+                        <td className="py-2 px-4 border">
+                          {row.user?.name ||
+                            row.residentName ||
+                            row.resident ||
+                            "-"}
+                        </td>
                         <td className="py-2 px-4 border">{row.houseNo}</td>
                         <td className="py-2 px-4 border text-red-600">
                           {row.status}

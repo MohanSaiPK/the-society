@@ -44,3 +44,17 @@ export const deleteAnnouncement = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// Mark all announcements as seen by the current user
+export const markAllSeen = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    await Announcement.updateMany(
+      { seenBy: { $ne: userId } },
+      { $addToSet: { seenBy: userId } }
+    );
+    res.json({ message: "All announcements marked as seen" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

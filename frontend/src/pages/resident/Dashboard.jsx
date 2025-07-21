@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
-// import useAuth from "../../hooks/useAuth"; // Not needed for now
+import useAuth from "../../hooks/useAuth";
 
 const menuItems = [
   { key: "overview", label: "Overview", icon: "🏠" },
@@ -11,12 +11,85 @@ const menuItems = [
 ];
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [selected, setSelected] = useState("overview");
   const [showSOSModal, setShowSOSModal] = useState(false);
   const [selectedSOSType, setSelectedSOSType] = useState(null);
   const [confirmSOS, setConfirmSOS] = useState(false);
   const [sosLoading, setSOSLoading] = useState(false);
   const [sosError, setSOSError] = useState("");
+
+  // Overview state
+  const [complaints, setComplaints] = useState([]);
+  const [gatepasses, setGatepasses] = useState([]);
+  const [sosAlerts, setSOSAlerts] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [polls, setPolls] = useState([]);
+
+  useEffect(() => {
+    // Fetch complaints
+    const fetchComplaints = async () => {
+      try {
+        const res = await api.get("/complaints");
+        setComplaints(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    // Fetch gatepasses
+    const fetchGatepasses = async () => {
+      try {
+        const res = await api.get("/gatepass");
+        setGatepasses(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    // Fetch SOS alerts
+    const fetchSOSAlerts = async () => {
+      try {
+        const res = await api.get("/sos");
+        setSOSAlerts(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    // Fetch announcements
+    const fetchAnnouncements = async () => {
+      try {
+        const res = await api.get("/announcements");
+        setAnnouncements(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    // Fetch polls
+    const fetchPolls = async () => {
+      try {
+        const res = await api.get("/polls");
+        setPolls(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchComplaints();
+    fetchGatepasses();
+    fetchSOSAlerts();
+    fetchAnnouncements();
+    fetchPolls();
+  }, []);
+
+  // Overview card values
+  const totalComplaints = complaints.length;
+  const openComplaints = complaints.filter((c) => c.status === "open").length;
+  const lastGatepass = gatepasses.length > 0 ? gatepasses[0] : null;
+  const activeSOS = sosAlerts.filter((a) => a.status === "active").length;
+  const unseenAnnouncements = announcements.filter(
+    (a) => !(a.seenBy || []).includes(user?.id)
+  ).length;
+  const unrespondedPolls = polls.filter(
+    (p) => !(p.voters || []).includes(user?.id)
+  ).length;
 
   const renderContent = () => {
     switch (selected) {
@@ -27,49 +100,69 @@ const Dashboard = () => {
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Total Complaints
               </h3>
-              <div className="text-3xl font-bold text-slate-900">1</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {totalComplaints}
+              </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Open Complaints
               </h3>
-              <div className="text-3xl font-bold text-slate-900">1</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {openComplaints}
+              </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 New Announcements
               </h3>
-              <div className="text-3xl font-bold text-slate-900">0</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {unseenAnnouncements}
+              </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Last Gatepass
               </h3>
               <div className="text-base text-slate-700">
-                <div>
-                  <b>Visitor:</b> hehe
-                </div>
-                <div>
-                  <b>Purpose:</b> friend
-                </div>
-                <div>
-                  <b>Status:</b>{" "}
-                  <span className="text-yellow-500 font-bold">pending</span>
-                </div>
-                <div className="mt-1 text-sm text-slate-400">7/25/2025</div>
+                {lastGatepass ? (
+                  <>
+                    <div>
+                      <b>Visitor:</b> {lastGatepass.visitor}
+                    </div>
+                    <div>
+                      <b>Purpose:</b> {lastGatepass.purpose}
+                    </div>
+                    <div>
+                      <b>Status:</b>{" "}
+                      <span className="text-yellow-500 font-bold">
+                        {lastGatepass.status}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-sm text-slate-400">
+                      {lastGatepass.date} {lastGatepass.time}
+                    </div>
+                  </>
+                ) : (
+                  <span className="text-slate-400">No gatepass found.</span>
+                )}
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Active SOS Alerts
               </h3>
-              <div className="text-3xl font-bold text-slate-900">4</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {activeSOS}
+              </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Active Polls
               </h3>
-              <div className="text-3xl font-bold text-slate-900">1</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {unrespondedPolls}
+              </div>
             </div>
           </div>
         );
@@ -498,6 +591,7 @@ const ComplaintsSection = ({ selected }) => {
 };
 
 const GatepassSection = ({ selected }) => {
+  const { user } = useAuth();
   const [tab, setTab] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [gatepasses, setGatepasses] = useState([]);
@@ -509,7 +603,6 @@ const GatepassSection = ({ selected }) => {
     purpose: "",
     date: "",
     time: "",
-    houseNo: "",
   });
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [loadingAction, setLoadingAction] = useState(false);
@@ -560,7 +653,10 @@ const GatepassSection = ({ selected }) => {
     setLoadingAction(true);
     setError("");
     try {
-      const res = await api.post("/gatepass", form);
+      const res = await api.post("/gatepass", {
+        ...form,
+        houseNo: user?.houseNumber,
+      });
       setGatepasses((prev) => [res.data, ...prev]);
       setForm({
         visitor: "",
@@ -568,7 +664,6 @@ const GatepassSection = ({ selected }) => {
         purpose: "",
         date: "",
         time: "",
-        houseNo: "",
       });
       setShowModal(false);
     } catch {
@@ -760,17 +855,6 @@ const GatepassSection = ({ selected }) => {
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">House Number</label>
-                <input
-                  type="text"
-                  name="houseNo"
-                  value={form.houseNo}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                />
-              </div>
-              <div>
                 <label className="block font-medium mb-1">Visit Date</label>
                 <input
                   type="date"
@@ -862,6 +946,14 @@ const AnnouncementsSection = ({ selected }) => {
           },
         });
         setAnnouncements(Array.isArray(res.data) ? res.data : []);
+        // Mark all as seen
+        await api.patch(
+          "/announcements/seen",
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       } catch (err) {
         console.error("Failed to load announcements", err);
         setError("Failed to load announcements");
@@ -944,89 +1036,31 @@ const CommunitySection = () => {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({
     provider: "",
-    service: "plumbing",
+    service: "",
     date: "",
     time: "",
   });
-
-  // Placeholder data
-  const serviceProviders = [
-    "John Plumber",
-    "Tutor Jane",
-    "CleanCo",
-    "ElectricFix",
-    "Gardener Sam",
-  ];
-  const services = [
-    "plumbing",
-    "tutor",
-    "house cleaning",
-    "electrician",
-    "gardening",
-  ];
-  const upcomingBookings = [
-    {
-      id: 1,
-      provider: "John Plumber",
-      service: "plumbing",
-      date: "2024-07-15",
-      time: "10:00 AM",
-      status: "pending",
-    },
-    {
-      id: 2,
-      provider: "Tutor Jane",
-      service: "tutor",
-      date: "2024-07-16",
-      time: "04:00 PM",
-      status: "accepted",
-    },
-  ];
-  const bookingHistory = [
-    {
-      id: 3,
-      provider: "CleanCo",
-      service: "house cleaning",
-      date: "2024-07-10",
-      time: "09:00 AM",
-      status: "accepted",
-    },
-    {
-      id: 4,
-      provider: "ElectricFix",
-      service: "electrician",
-      date: "2024-07-09",
-      time: "01:00 PM",
-      status: "rejected",
-    },
-    {
-      id: 5,
-      provider: "Gardener Sam",
-      service: "gardening",
-      date: "2024-07-08",
-      time: "08:00 AM",
-      status: "pending",
-    },
-    {
-      id: 6,
-      provider: "John Plumber",
-      service: "plumbing",
-      date: "2024-07-05",
-      time: "11:00 AM",
-      status: "accepted",
-    },
-  ];
+  // Service booking state
+  const [providers, setProviders] = useState([]);
+  const [providerServices, setProviderServices] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   // SOS Alerts state
   const [sosAlerts, setSOSAlerts] = useState([]);
   const [sosLoading, setSOSLoading] = useState(false);
   const [sosError, setSOSError] = useState("");
-  // In CommunitySection:
+  // Polls state
   const [polls, setPolls] = useState([]);
   const [pollsLoading, setPollsLoading] = useState(false);
   const [pollsError, setPollsError] = useState("");
-  const [voting, setVoting] = useState({}); // { [pollId]: boolean }
+  const [voting, setVoting] = useState({});
 
   useEffect(() => {
+    if (section === "service") {
+      fetchProviders();
+      fetchBookings();
+    }
     if (section === "sos") {
       fetchSOSAlerts();
     }
@@ -1035,6 +1069,85 @@ const CommunitySection = () => {
     }
   }, [section]);
 
+  // Service Bookings logic
+  const fetchProviders = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/bookings/providers");
+      setProviders(res.data);
+    } catch {
+      setError("Failed to load providers");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchBookings = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/bookings/my");
+      setBookings(res.data);
+    } catch {
+      setError("Failed to load bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleProviderChange = (e) => {
+    const providerId = e.target.value;
+    setForm((prev) => ({ ...prev, provider: providerId, service: "" }));
+    const selected = providers.find((p) => p._id === providerId);
+    setProviderServices(selected ? selected.services : []);
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      await api.post("/bookings", {
+        providerId: form.provider,
+        service: form.service,
+        date: form.date,
+        time: form.time,
+      });
+      setShowModal(false);
+      setForm({ provider: "", service: "", date: "", time: "" });
+      fetchBookings();
+    } catch {
+      setError("Failed to book service");
+    } finally {
+      setLoading(false);
+    }
+  };
+  // Filter bookings for upcoming/history
+  const now = new Date();
+  // Update upcoming bookings filter to only show accepted or pending and not completed or rejected
+  const upcoming = bookings.filter(
+    (b) =>
+      new Date(b.date) > now &&
+      (b.status === "accepted" || b.status === "pending") &&
+      !b.completed
+  );
+  // In CommunitySection, update the historyTab options to include 'completed'
+  // Update filteredHistory logic to support completed tab
+  const historyTabOptions = [
+    "all",
+    "pending",
+    "accepted",
+    "rejected",
+    "completed",
+  ];
+  const filteredHistory =
+    historyTab === "all"
+      ? bookings
+      : historyTab === "completed"
+      ? bookings.filter((b) => b.completed)
+      : bookings.filter((b) => b.status === historyTab && !b.completed);
+
+  // SOS Alerts logic
   const fetchSOSAlerts = async () => {
     setSOSLoading(true);
     setSOSError("");
@@ -1050,7 +1163,7 @@ const CommunitySection = () => {
       setSOSLoading(false);
     }
   };
-
+  // Polls logic
   const fetchPolls = async () => {
     setPollsLoading(true);
     setPollsError("");
@@ -1066,7 +1179,6 @@ const CommunitySection = () => {
       setPollsLoading(false);
     }
   };
-
   const handleVote = async (pollId, optionIndex) => {
     setVoting((prev) => ({ ...prev, [pollId]: true }));
     try {
@@ -1084,21 +1196,17 @@ const CommunitySection = () => {
     }
   };
 
-  const filteredHistory =
-    historyTab === "all"
-      ? bookingHistory
-      : bookingHistory.filter((b) => b.status === historyTab);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would handle the form submission (e.g., API call)
-    setShowModal(false);
-    setForm({ provider: "", service: "plumbing", date: "", time: "" });
+  const handleMarkCompleted = async (bookingId) => {
+    setLoading(true);
+    setError("");
+    try {
+      await api.patch(`/bookings/resident/bookings/${bookingId}/complete`);
+      fetchBookings();
+    } catch {
+      setError("Failed to mark as completed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -1163,7 +1271,7 @@ const CommunitySection = () => {
           {bookingTab === "upcoming" && (
             <div>
               <h3 className="font-semibold text-lg mb-2">Upcoming Bookings</h3>
-              {upcomingBookings.length === 0 ? (
+              {upcoming.length === 0 ? (
                 <div className="text-gray-500 italic p-6">
                   No upcoming bookings.
                 </div>
@@ -1189,16 +1297,16 @@ const CommunitySection = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {upcomingBookings.map((b) => (
-                      <tr key={b.id} className="border-b border-slate-200">
+                    {upcoming.map((b) => (
+                      <tr key={b._id} className="border-b border-slate-200">
                         <td className="px-2 py-2 text-base text-slate-900">
-                          {b.provider}
+                          {b.provider?.name}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900 capitalize">
                           {b.service}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900">
-                          {b.date}
+                          {new Date(b.date).toLocaleDateString()}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900">
                           {b.time}
@@ -1216,7 +1324,7 @@ const CommunitySection = () => {
           {bookingTab === "history" && (
             <div>
               <div className="flex gap-2 mb-2">
-                {["all", "pending", "accepted", "rejected"].map((tab) => (
+                {historyTabOptions.map((tab) => (
                   <button
                     key={tab}
                     className={`px-4 py-2 rounded-full border-none text-base transition-colors duration-200 font-medium ${
@@ -1258,21 +1366,35 @@ const CommunitySection = () => {
                   </thead>
                   <tbody>
                     {filteredHistory.map((b) => (
-                      <tr key={b.id} className="border-b border-slate-200">
+                      <tr key={b._id} className="border-b border-slate-200">
                         <td className="px-2 py-2 text-base text-slate-900">
-                          {b.provider}
+                          {b.provider?.name}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900 capitalize">
                           {b.service}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900">
-                          {b.date}
+                          {new Date(b.date).toLocaleDateString()}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900">
                           {b.time}
                         </td>
                         <td className="px-2 py-2 text-base text-slate-900 capitalize">
                           {b.status}
+                          {b.status === "accepted" && !b.completed && (
+                            <button
+                              className="ml-2 px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+                              onClick={() => handleMarkCompleted(b._id)}
+                              disabled={loading}
+                            >
+                              Mark as Completed
+                            </button>
+                          )}
+                          {b.status === "accepted" && b.completed && (
+                            <span className="ml-2 text-green-700 text-xs">
+                              Completed
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -1302,14 +1424,14 @@ const CommunitySection = () => {
                     <select
                       name="provider"
                       value={form.provider}
-                      onChange={handleInputChange}
+                      onChange={handleProviderChange}
                       required
                       className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                       <option value="">Select provider</option>
-                      {serviceProviders.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
+                      {providers.map((p) => (
+                        <option key={p._id} value={p._id}>
+                          {p.name}
                         </option>
                       ))}
                     </select>
@@ -1322,8 +1444,10 @@ const CommunitySection = () => {
                       onChange={handleInputChange}
                       required
                       className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      disabled={!form.provider}
                     >
-                      {services.map((s) => (
+                      <option value="">Select service</option>
+                      {providerServices.map((s) => (
                         <option key={s} value={s}>
                           {s.charAt(0).toUpperCase() + s.slice(1)}
                         </option>
@@ -1364,11 +1488,13 @@ const CommunitySection = () => {
                     <button
                       type="submit"
                       className="px-4 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
+                      disabled={loading}
                     >
-                      Submit
+                      {loading ? "Submitting..." : "Submit"}
                     </button>
                   </div>
                 </form>
+                {error && <div className="text-red-500 mt-2">{error}</div>}
               </div>
             </div>
           )}

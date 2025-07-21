@@ -8,17 +8,46 @@ const Register = () => {
     email: "",
     password: "",
     role: "resident",
+    houseNumber: "",
+    services: [],
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const serviceOptions = [
+    "plumbing",
+    "tutor",
+    "house cleaning",
+    "electrician",
+    "gardening",
+  ];
+
+  const handleChange = (e) => {
+    const { name, value, checked } = e.target;
+    if (name === "services") {
+      setForm((prev) => {
+        if (checked) {
+          return { ...prev, services: [...prev.services, value] };
+        } else {
+          return {
+            ...prev,
+            services: prev.services.filter((s) => s !== value),
+          };
+        }
+      });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/register", form);
+      // Prepare payload based on role
+      let payload = { ...form };
+      if (form.role !== "resident") delete payload.houseNumber;
+      if (form.role !== "provider") delete payload.services;
+      await api.post("/auth/register", payload);
       setSuccess("Registration successful! You can now log in.");
       setError("");
     } catch (err) {
@@ -67,9 +96,40 @@ const Register = () => {
         >
           <option value="resident">Resident</option>
           <option value="guard">Guard</option>
-          <option value="provider">Provider</option>
+          <option value="provider">Service Provider</option>
           {/* <option value="admin">Admin</option> */}
         </select>
+        {/* House Number for Resident */}
+        {form.role === "resident" && (
+          <input
+            name="houseNumber"
+            placeholder="House Number"
+            className="w-full mb-2 p-2 border rounded"
+            value={form.houseNumber}
+            onChange={handleChange}
+            required
+          />
+        )}
+        {/* Services for Service Provider */}
+        {form.role === "provider" && (
+          <div className="mb-2">
+            <div className="font-medium mb-1">Select Services:</div>
+            <div className="flex flex-wrap gap-2">
+              {serviceOptions.map((service) => (
+                <label key={service} className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    name="services"
+                    value={service}
+                    checked={form.services.includes(service)}
+                    onChange={handleChange}
+                  />
+                  {service.charAt(0).toUpperCase() + service.slice(1)}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
         <button
           className="w-full bg-blue-500 text-white py-2 rounded"
           type="submit"

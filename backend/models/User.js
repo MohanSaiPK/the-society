@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "resident", "guard", "provider"],
     default: "resident",
   },
+  houseNumber: { type: String }, // For residents
+  services: [{ type: String }], // For providers
 });
 
 export default mongoose.model("User", userSchema);

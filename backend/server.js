@@ -9,6 +9,7 @@ import announcementRoutes from "./routes/announcements.js";
 import sosRoutes from "./routes/sos.js";
 import pollRoutes from "./routes/polls.js";
 import visitorLogRoutes from "./routes/visitorLog.js";
+import bookingRoutes from "./routes/booking.js";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/sos", sosRoutes);
 app.use("/api/polls", pollRoutes);
 app.use("/api/visitorlog", visitorLogRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req, res) => res.send("API running"));
 

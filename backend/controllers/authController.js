@@ -4,12 +4,16 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, houseNumber, services } = req.body;
     const existing = await User.findOne({ email });
     if (existing)
       return res.status(400).json({ message: "Email already exists" });
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed, role });
+    const userData = { name, email, password: hashed, role };
+    if (role === "resident" && houseNumber) userData.houseNumber = houseNumber;
+    if (role === "provider" && Array.isArray(services))
+      userData.services = services;
+    const user = await User.create(userData);
     res.status(201).json({ message: "User registered" });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -38,6 +42,8 @@ export const login = async (req, res) => {
         name: user.name,
         role: user.role,
         email: user.email,
+        houseNumber: user.houseNumber,
+        services: user.services,
       },
     });
   } catch (err) {
