@@ -112,7 +112,7 @@ const Register = () => {
               <input
                 name="houseNumber"
                 placeholder="House Number"
-                className="w-full mb-2 p-2 border rounded text-white"
+                className="w-full mb-2 p-2 border rounded text-black"
                 value={form.houseNumber}
                 onChange={handleChange}
                 required
