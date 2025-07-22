@@ -1,6 +1,6 @@
 import React from "react";
 // Adjust the path as necessary
-import LandImage from "../assets/Landimage.png";
+import LandImage from "../assets/LandImage.png";
 import {
   FaTicketAlt,
   FaTasks,
