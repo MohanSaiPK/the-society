@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
-import DashboardLayout from "../layout/DashBoardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
 
 import LandingPage from "../Pages/LandingPage";
