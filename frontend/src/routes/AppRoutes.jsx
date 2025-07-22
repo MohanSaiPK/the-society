@@ -3,7 +3,7 @@ import MainLayout from "../layout/MainLayout";
 import DashboardLayout from "../layout/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
 
-import LandingPage from "../Pages/LandingPage";
+import LandingPage from "../pages/LandingPage";
 import ResidentDashboard from "../pages/resident/Dashboard";
 import AdminDashboard from "../pages/admin/Dashboard";
 import GuardDashboard from "../pages/guard/Dashboard";
