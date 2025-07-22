@@ -95,8 +95,8 @@ const Dashboard = () => {
     switch (selected) {
       case "overview":
         return (
-          <div className="grid gap-6 max-w-3xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+          <div className="grid gap-6 max-w-6xl min-h-3/4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch [grid-auto-rows:1fr]">
+            <div className=" rounded-xl shadow p-6 flex flex-col h-full justify-center bg-yellow-100">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Total Complaints
               </h3>
@@ -104,7 +104,7 @@ const Dashboard = () => {
                 {totalComplaints}
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+            <div className=" rounded-xl shadow p-6 flex flex-col h-full justify-center bg-blue-100">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Open Complaints
               </h3>
@@ -112,7 +112,7 @@ const Dashboard = () => {
                 {openComplaints}
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+            <div className="bg-purple-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 New Announcements
               </h3>
@@ -120,7 +120,7 @@ const Dashboard = () => {
                 {unseenAnnouncements}
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+            <div className="bg-green-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Last Gatepass
               </h3>
@@ -148,7 +148,7 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+            <div className="bg-red-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Active SOS Alerts
               </h3>
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 {activeSOS}
               </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-6 flex flex-col items-start min-h-[120px]">
+            <div className="bg-pink-300 rounded-xl shadow p-6 flex flex-col h-full justify-center">
               <h3 className="text-indigo-900 font-semibold text-lg mb-2">
                 Active Polls
               </h3>
@@ -180,17 +180,17 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <nav className="w-52 bg-slate-100 py-5 flex flex-col items-center shadow-md">
+    <div className="flex h-screen mt-20">
+      <nav className="w-52 bg-white py-5 flex flex-col items-center shadow-md ">
         {menuItems.map((item) => (
           <button
             key={item.key}
             onClick={() => setSelected(item.key)}
             className={`w-11/12 my-2 px-3 py-3 rounded-lg flex items-center transition-colors duration-200 text-base font-medium ${
               selected === item.key
-                ? "bg-indigo-100 text-indigo-800 font-bold"
-                : "bg-transparent text-slate-800"
-            } hover:bg-indigo-50`}
+                ? "text-yellow-400 bg-black font-bold "
+                : "text-black bg-yellow-400"
+            } hover:text-yellow-500 hover:bg-black shadow-md`}
           >
             <span className="text-2xl mr-3">{item.icon}</span>
             {item.label}
@@ -437,76 +437,53 @@ const ComplaintsSection = ({ selected }) => {
         ) : filtered.length === 0 ? (
           <div className="text-gray-500 italic p-6">No complaints found.</div>
         ) : (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Title
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Category
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Urgency
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Status
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Date
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Description
-                </th>
-                {(tab === "all" || tab === "open") &&
-                  filtered.some((c) => c.status === "open") && (
-                    <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                      Action
-                    </th>
-                  )}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((c) => (
-                <tr key={c._id} className="border-b border-slate-200">
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {c.title}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {c.category}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {c.urgency}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900 capitalize">
-                    {c.status}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {c.date}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {c.description}
-                  </td>
-                  {(tab === "all" || tab === "open") && c.status === "open" ? (
-                    <td className="px-2 py-2 text-base text-slate-900">
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                        onClick={() => handleDelete(c._id)}
-                        disabled={
-                          (tab === "all" &&
-                            c.status !== "open" &&
-                            c.status !== "pending") ||
-                          loadingAction
-                        }
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="space-y-4">
+            {filtered.map((c) => (
+              <div
+                key={c._id}
+                className="flex items-center justify-between  rounded-xl shadow-xl p-4 bg-yellow-100"
+              >
+                <div className="flex flex-col ">
+                  <div className="font-semibold text-lg">{c.title}</div>
+                  <div className="text-sm text-gray-600 flex flex-col ">
+                    <span className="mr-2">Category: {c.category}</span>
+                    <span className="mr-2">Urgency: {c.urgency}</span>
+
+                    <span className="mr-2">Date: {c.date}</span>
+                  </div>
+                  <div className="mt-1 text-gray-700">
+                    Description:{c.description}
+                  </div>
+                </div>
+                {c.status === "open" ? (
+                  <div className="flex flex-col gap-2 ml-4 items-end">
+                    <span className="capitalize font-semibold text-white bg-yellow-400 rounded-full px-2 py-1">
+                      {c.status}
+                    </span>
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      onClick={() => handleDelete(c._id)}
+                      disabled={loadingAction}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ) : (
+                  <div className="ml-4 items-end flex flex-col">
+                    <span
+                      className={`capitalize font-semibold ${
+                        c.status === "in progress"
+                          ? "text-white bg-blue-400 rounded-full px-2 py-1"
+                          : "text-white bg-green-400 rounded-full px-2 py-1"
+                      }`}
+                    >
+                      {c.status}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
       {/* Modal */}
@@ -595,8 +572,6 @@ const GatepassSection = ({ selected }) => {
   const [tab, setTab] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [gatepasses, setGatepasses] = useState([]);
-  const [showCommentModal, setShowCommentModal] = useState(false);
-  const [commentModalText, setCommentModalText] = useState("");
   const [form, setForm] = useState({
     visitor: "",
     comments: "",
@@ -720,96 +695,53 @@ const GatepassSection = ({ selected }) => {
         ) : filtered.length === 0 ? (
           <div className="text-gray-500 italic p-6">No gatepasses found.</div>
         ) : (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Visitor
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Purpose
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Comments
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  House No
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Date
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Time
-                </th>
-                <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                  Status
-                </th>
-                {(tab === "all" || tab === "pending" || tab === "open") &&
-                  filtered.some(
-                    (g) => g.status === "open" || g.status === "pending"
-                  ) && (
-                    <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                      Action
-                    </th>
-                  )}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((g) => (
-                <tr key={g._id} className="border-b border-slate-200">
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.visitor}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.purpose}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.comments}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.houseNo}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.date}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900">
-                    {g.time}
-                  </td>
-                  <td className="px-2 py-2 text-base text-slate-900 capitalize">
+          <div className="space-y-4">
+            {filtered.map((g) => (
+              <div
+                key={g._id}
+                className="flex items-center justify-between bg-white rounded-xl shadow p-4"
+              >
+                <div className="flex flex-col">
+                  <div className="font-semibold text-lg">
+                    Visitor: {g.visitor}
+                  </div>
+                  <div className="text-sm text-gray-600 flex flex-col">
+                    <span className="mr-2">Purpose: {g.purpose}</span>
+                    <span className="mr-2">Comments: {g.comments}</span>
+
+                    <span className="mr-2">Date: {g.date}</span>
+                    <span className="mr-2">Time: {g.time}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 ml-4 items-end">
+                  <span
+                    className={`capitalize font-semibold ${
+                      g.status === "pending"
+                        ? "text-white bg-yellow-400 rounded-full px-2 py-1"
+                        : g.status === "approved"
+                        ? "text-white bg-blue-400 rounded-full px-2 py-1"
+                        : g.status === "completed"
+                        ? "text-white bg-green-400 rounded-full px-2 py-1"
+                        : g.status === "rejected"
+                        ? "text-white bg-red-400 rounded-full px-2 py-1"
+                        : "text-gray-700 bg-gray-200 rounded-full px-2 py-1"
+                    }`}
+                  >
                     {g.status}
-                  </td>
-                  {(tab === "all" || tab === "pending" || tab === "open") &&
-                  (g.status === "open" || g.status === "pending") ? (
-                    <td className="px-2 py-2 text-base text-slate-900">
-                      {g.status !== "pending" && g.guardComment && (
-                        <button
-                          className="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600 mr-2"
-                          onClick={() => {
-                            setCommentModalText(g.guardComment);
-                            setShowCommentModal(true);
-                          }}
-                        >
-                          Comments
-                        </button>
-                      )}
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                        onClick={() => handleDelete(g._id)}
-                        disabled={
-                          (tab === "all" &&
-                            (g.status === "in progress" ||
-                              g.status === "resolved")) ||
-                          loadingAction
-                        }
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </span>
+                  {(g.status === "pending" || g.status === "open") && (
+                    <button
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      onClick={() => handleDelete(g._id)}
+                      disabled={loadingAction}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
       {/* Modal */}
@@ -898,23 +830,6 @@ const GatepassSection = ({ selected }) => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-      {/* Guard Comment Modal */}
-      {showCommentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
-            <h2 className="text-xl font-bold mb-4">Guard's Comment</h2>
-            <div className="mb-4">{commentModalText}</div>
-            <div className="flex justify-end">
-              <button
-                className="px-4 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
-                onClick={() => setShowCommentModal(false)}
-              >
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -1147,6 +1062,19 @@ const CommunitySection = () => {
       ? bookings.filter((b) => b.completed)
       : bookings.filter((b) => b.status === historyTab && !b.completed);
 
+  const handleMarkCompleted = async (bookingId) => {
+    setLoading(true);
+    setError("");
+    try {
+      await api.patch(`/bookings/resident/bookings/${bookingId}/complete`);
+      fetchBookings();
+    } catch {
+      setError("Failed to mark as completed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // SOS Alerts logic
   const fetchSOSAlerts = async () => {
     setSOSLoading(true);
@@ -1193,19 +1121,6 @@ const CommunitySection = () => {
       alert("Failed to vote. You may have already voted.");
     } finally {
       setVoting((prev) => ({ ...prev, [pollId]: false }));
-    }
-  };
-
-  const handleMarkCompleted = async (bookingId) => {
-    setLoading(true);
-    setError("");
-    try {
-      await api.patch(`/bookings/resident/bookings/${bookingId}/complete`);
-      fetchBookings();
-    } catch {
-      setError("Failed to mark as completed");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -1276,48 +1191,53 @@ const CommunitySection = () => {
                   No upcoming bookings.
                 </div>
               ) : (
-                <table className="w-full border-collapse mb-4">
-                  <thead>
-                    <tr className="bg-slate-100">
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Provider
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Service
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Date
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Time
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {upcoming.map((b) => (
-                      <tr key={b._id} className="border-b border-slate-200">
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {b.provider?.name}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900 capitalize">
-                          {b.service}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {new Date(b.date).toLocaleDateString()}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {b.time}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900 capitalize">
-                          {b.status}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {upcoming.map((b) => (
+                    <div
+                      key={b._id}
+                      className="bg-white rounded-2xl shadow p-6 flex flex-col min-w-0 relative"
+                    >
+                      <div className="flex items-center gap-4 mb-2">
+                        <span className="text-3xl text-blue-500">
+                          <i className="fa-solid fa-people-group"></i>
+                        </span>
+                        <div>
+                          <div className="font-bold text-lg text-black">
+                            {b.provider?.name || "service"}
+                          </div>
+                          <div className="text-gray-600 text-base">
+                            {b.service}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center mt-4 text-gray-700 text-sm">
+                        <div className="flex items-center gap-2">
+                          <i className="fa-regular fa-calendar"></i>
+                          <span>{new Date(b.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <i className="fa-regular fa-clock"></i>
+                          <span>{b.time}</span>
+                        </div>
+                      </div>
+                      <span
+                        className={`absolute bottom-4 right-4 capitalize font-semibold ${
+                          b.status === "pending"
+                            ? "text-white bg-yellow-400 rounded-full px-2 py-1"
+                            : b.status === "accepted"
+                            ? "text-white bg-blue-400 rounded-full px-2 py-1"
+                            : b.status === "completed"
+                            ? "text-white bg-green-400 rounded-full px-2 py-1"
+                            : b.status === "rejected"
+                            ? "text-white bg-red-400 rounded-full px-2 py-1"
+                            : "text-gray-700 bg-gray-200 rounded-full px-2 py-1"
+                        }`}
+                      >
+                        {b.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -1344,62 +1264,64 @@ const CommunitySection = () => {
                   No bookings found.
                 </div>
               ) : (
-                <table className="w-full border-collapse mb-4">
-                  <thead>
-                    <tr className="bg-slate-100">
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Provider
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Service
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Date
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Time
-                      </th>
-                      <th className="text-left px-2 py-2 font-semibold text-indigo-900 text-base">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredHistory.map((b) => (
-                      <tr key={b._id} className="border-b border-slate-200">
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {b.provider?.name}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900 capitalize">
-                          {b.service}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {new Date(b.date).toLocaleDateString()}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900">
-                          {b.time}
-                        </td>
-                        <td className="px-2 py-2 text-base text-slate-900 capitalize">
-                          {b.status}
-                          {b.status === "accepted" && !b.completed && (
-                            <button
-                              className="ml-2 px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
-                              onClick={() => handleMarkCompleted(b._id)}
-                              disabled={loading}
-                            >
-                              Mark as Completed
-                            </button>
-                          )}
-                          {b.status === "accepted" && b.completed && (
-                            <span className="ml-2 text-green-700 text-xs">
-                              Completed
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {filteredHistory.map((b) => (
+                    <div
+                      key={b._id}
+                      className="bg-white rounded-2xl shadow p-6 flex flex-col min-w-0 relative"
+                    >
+                      <div className="flex items-center gap-4 mb-2">
+                        <span className="text-3xl text-blue-500">
+                          <i className="fa-solid fa-people-group"></i>
+                        </span>
+                        <div>
+                          <div className="font-bold text-lg text-black">
+                            {b.provider?.name || "service"}
+                          </div>
+                          <div className="text-gray-600 text-base">
+                            {b.service}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center mt-4 text-gray-700 text-sm">
+                        <div className="flex items-center gap-2">
+                          <i className="fa-regular fa-calendar"></i>
+                          <span>{new Date(b.date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <i className="fa-regular fa-clock"></i>
+                          <span>{b.time}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 absolute bottom-4 right-4">
+                        <span
+                          className={`capitalize font-semibold ${
+                            b.completed
+                              ? "text-white bg-green-400 rounded-full px-2 py-1"
+                              : b.status === "pending"
+                              ? "text-white bg-yellow-400 rounded-full px-2 py-1"
+                              : b.status === "accepted"
+                              ? "text-white bg-blue-400 rounded-full px-2 py-1"
+                              : b.status === "rejected"
+                              ? "text-white bg-red-400 rounded-full px-2 py-1"
+                              : "text-gray-700 bg-gray-200 rounded-full px-2 py-1"
+                          }`}
+                        >
+                          {b.completed ? "Completed" : b.status}
+                        </span>
+                        {b.status === "accepted" && !b.completed && (
+                          <button
+                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+                            onClick={() => handleMarkCompleted(b._id)}
+                            disabled={loading}
+                          >
+                            Mark as Completed
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}

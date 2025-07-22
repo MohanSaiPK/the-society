@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../utils/api";
+import regImage from "../../assets/regbg.png";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -57,93 +58,123 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-4 border rounded">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-xl font-bold mb-4">Register</h2>
-        {error && <div className="text-red-500 mb-2">{error}</div>}
-        {success && <div className="text-green-500 mb-2">{success}</div>}
-        <input
-          name="name"
-          placeholder="Name"
-          className="w-full mb-2 p-2 border rounded"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          className="w-full mb-2 p-2 border rounded"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="w-full mb-2 p-2 border rounded"
-          value={form.password}
-          onChange={handleChange}
-          required
-        />
-        <select
-          name="role"
-          className="w-full mb-2 p-2 border rounded"
-          value={form.role}
-          onChange={handleChange}
-        >
-          <option value="resident">Resident</option>
-          <option value="guard">Guard</option>
-          <option value="provider">Service Provider</option>
-          {/* <option value="admin">Admin</option> */}
-        </select>
-        {/* House Number for Resident */}
-        {form.role === "resident" && (
-          <input
-            name="houseNumber"
-            placeholder="House Number"
-            className="w-full mb-2 p-2 border rounded"
-            value={form.houseNumber}
-            onChange={handleChange}
-            required
-          />
-        )}
-        {/* Services for Service Provider */}
-        {form.role === "provider" && (
-          <div className="mb-2">
-            <div className="font-medium mb-1">Select Services:</div>
-            <div className="flex flex-wrap gap-2">
-              {serviceOptions.map((service) => (
-                <label key={service} className="flex items-center gap-1">
-                  <input
-                    type="checkbox"
-                    name="services"
-                    value={service}
-                    checked={form.services.includes(service)}
-                    onChange={handleChange}
-                  />
-                  {service.charAt(0).toUpperCase() + service.slice(1)}
-                </label>
-              ))}
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-6xl   flex mx-auto mt-10 p-4  rounded-3xl bg-black justify-center items-center shadow-2xl">
+        <div className="w-3/5 justify-center items-center flex flex-col m-10 bg-white rounded-3xl ">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col w-4/5 justify-center items-center mt-10 gap-5"
+          >
+            <h2 className="text-2xl font-sm mb-4 text-yellow-400">
+              Create your account
+            </h2>
+            {error && <div className="text-red-500 mb-2">{error}</div>}
+            {success && <div className="text-green-500 mb-2">{success}</div>}
+            <input
+              name="name"
+              placeholder="Name"
+              className="w-full mb-2 p-2 border rounded "
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              className="w-full mb-2 p-2 border rounded"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              className="w-full mb-2 p-2 border rounded"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <select
+              name="role"
+              className="w-full mb-2 p-2 border rounded"
+              value={form.role}
+              onChange={handleChange}
+            >
+              <option value="resident">Resident</option>
+              <option value="guard">Guard</option>
+              <option value="provider">Service Provider</option>
+              {/* <option value="admin">Admin</option> */}
+            </select>
+            {/* House Number for Resident */}
+            {form.role === "resident" && (
+              <input
+                name="houseNumber"
+                placeholder="House Number"
+                className="w-full mb-2 p-2 border rounded text-white"
+                value={form.houseNumber}
+                onChange={handleChange}
+                required
+              />
+            )}
+            {/* Services for Service Provider */}
+            {form.role === "provider" && (
+              <div className="mb-2">
+                <div className="font-medium mb-1 text-yellow-400">
+                  Select Services:
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {serviceOptions.map((service) => (
+                    <label
+                      key={service}
+                      className="flex items-center gap-1 text-yellow-400  "
+                    >
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value={service}
+                        checked={form.services.includes(service)}
+                        onChange={handleChange}
+                        className="text-white"
+                      />
+                      {service.charAt(0).toUpperCase() + service.slice(1)}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+            <button
+              className="w-full bg-yellow-400 text-black py-2 rounded"
+              type="submit"
+            >
+              Register
+            </button>
+          </form>
+          <div className="mt-4 text-center mb-10">
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link to="/login" className="text-yellow-400 hover:underline">
+                Login here
+              </Link>
+            </p>
           </div>
-        )}
-        <button
-          className="w-full bg-blue-500 text-white py-2 rounded"
-          type="submit"
-        >
-          Register
-        </button>
-      </form>
-      <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login here
-          </Link>
-        </p>
+        </div>
+        <div className="register-banner w-2/5">
+          <div className="flex flex-col items-center justify-center h-full w-full space-y-4">
+            <div className=" w-full bg-black flex items-center justify-center h-1/5">
+              <h1 className=" w-5/6 text-yellow-400 text-sm text-center font-bold">
+                Join Cee Towers and manage your society life with ease. Please
+                fill in the details below to create your account.
+              </h1>
+            </div>
+            <img
+              src={regImage}
+              alt="Register"
+              className=" w-2/3 rounded-3xl "
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -263,7 +263,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 mt-20">
       <div className="flex gap-4 mb-6 border-b overflow-x-auto">
         {TABS.map((tab) => (
           <button

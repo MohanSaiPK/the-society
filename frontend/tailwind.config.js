@@ -6,6 +6,10 @@ export default {
       backgroundImage: {
         landing: "url('/bg.jpg')",
       },
+      fontFamily: {
+        greatVibes: ["Great Vibes", "cursive"],
+        ptSerif: ["PT Serif", "serif"],
+      },
     },
   },
   plugins: [],

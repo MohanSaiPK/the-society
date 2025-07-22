@@ -17,21 +17,23 @@ const LandingPage = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="flex h-screen justify-between bg-red-500 text-white text-xl">
-        <div className="w-1/2 flex flex-col justify-center items-center">
-          <h1>Welcome to Cee Towers</h1>
-          <p className="text-white text-lg max-w-2xl mx-auto">
-            Manage your daily needs with ease — book home services, raise
+      <div className="flex h-screen justify-between  text-white text-xl">
+        <div className="w-1/2 flex flex-col justify-center items-center gap-8">
+          <h1 className="font-ptSerif text-6xl text-yellow-400 text-outline start">
+            Welcome to Cee Towers
+          </h1>
+          <p className=" text-black text-lg pl-20 mx-auto font-ptSerif ">
+            Manage your daily needs with ease book home services, raise
             maintenance requests, handle visitor passes, receive community
-            updates, and send instant SOS alerts! All from one powerful
+            updates, and send instant SOS alerts! <br /> All from one powerful
             platform.
           </p>
           <div>
-            <button className="mt-4 bg-blue-600 text-white px-6 py-2 rounded">
+            <button className="mt-4 bg-yellow-400 text-black px-6 py-2 rounded">
               Know More
             </button>
             <button
-              className="mt-4 ml-4 bg-blue-600 text-white px-6 py-2 rounded"
+              className="mt-4 ml-4 bg-yellow-400 text-black px-6 py-2 rounded"
               onClick={() => {
                 navigate("/register");
               }}
