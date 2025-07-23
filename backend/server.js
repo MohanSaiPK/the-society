@@ -16,7 +16,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "https://cee-towers.netlify.app",
+    origin: ["https://cee-towers.netlify.app", "http://localhost:5173"],
     credentials: false,
     methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -46,5 +46,5 @@ app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req, res) => res.send("API running"));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
