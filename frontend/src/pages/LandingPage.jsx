@@ -28,7 +28,7 @@ const LandingPage = () => {
             updates, and send instant SOS alerts! <br /> All from one powerful
             platform.
           </p>
-          <div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 ">
             <button className="mt-2 sm:mt-4 bg-yellow-400 text-black px-3 sm:px-6 py-1 sm:py-2 rounded text-xs sm:text-base">
               Know More
             </button>
@@ -149,7 +149,7 @@ const LandingPage = () => {
             <h1 className="text-xs sm:text-lg font-bold mb-1 sm:mb-2">
               Cee Towers
             </h1>
-            <p className="text-xs sm:text-base text-start">
+            <p className="text-[10px] sm:text-base text-start">
               Cee Towers is a modern residential complex located in the heart of
               the city. It is a 10-storey building with 100 units.
             </p>
