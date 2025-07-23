@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../utils/api";
 import useAuth from "../../hooks/useAuth";
+import { HiMenu } from "react-icons/hi";
 
 const menuItems = [
   { key: "overview", label: "Overview", icon: "🏠" },
@@ -18,6 +19,14 @@ const Dashboard = () => {
   const [confirmSOS, setConfirmSOS] = useState(false);
   const [sosLoading, setSOSLoading] = useState(false);
   const [sosError, setSOSError] = useState("");
+  const [navOpen, setNavOpen] = useState(false);
+
+  // Listen for navbar hamburger event (for resident)
+  React.useEffect(() => {
+    const handler = () => setNavOpen(true);
+    window.addEventListener("openResidentNav", handler);
+    return () => window.removeEventListener("openResidentNav", handler);
+  }, []);
 
   // Overview state
   const [complaints, setComplaints] = useState([]);
@@ -95,36 +104,58 @@ const Dashboard = () => {
     switch (selected) {
       case "overview":
         return (
-          <div className="grid gap-6 max-w-6xl min-h-3/4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch [grid-auto-rows:1fr]">
-            <div className=" rounded-xl shadow p-6 flex flex-col h-full justify-center bg-yellow-100">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-6xl min-h-3/4 mx-auto items-stretch [grid-auto-rows:1fr]">
+            {/* Total Complaints */}
+            <div className="rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center bg-yellow-100 col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
                 Total Complaints
               </h3>
-              <div className="text-3xl font-bold text-slate-900">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
                 {totalComplaints}
               </div>
             </div>
-            <div className=" rounded-xl shadow p-6 flex flex-col h-full justify-center bg-blue-100">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
+            {/* Open Complaints */}
+            <div className="rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center bg-blue-100 col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
                 Open Complaints
               </h3>
-              <div className="text-3xl font-bold text-slate-900">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
                 {openComplaints}
               </div>
             </div>
-            <div className="bg-purple-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
+            {/* New Announcements */}
+            <div className="bg-purple-100 rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
                 New Announcements
               </h3>
-              <div className="text-3xl font-bold text-slate-900">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
                 {unseenAnnouncements}
               </div>
             </div>
-            <div className="bg-green-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
+            {/* Active SOS Alerts */}
+            <div className="bg-red-100 rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
+                Active SOS Alerts
+              </h3>
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+                {activeSOS}
+              </div>
+            </div>
+            {/* Active Polls (full width on mobile) */}
+            <div className="bg-pink-300 rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center col-span-2 md:col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
+                Active Polls
+              </h3>
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+                {unrespondedPolls}
+              </div>
+            </div>
+            {/* Last Gatepass (full width on mobile) */}
+            <div className="bg-green-100 rounded-xl shadow p-3 sm:p-4 md:p-6 flex flex-col h-full justify-center col-span-2 md:col-span-1">
+              <h3 className="text-indigo-900 font-semibold text-base sm:text-lg mb-1 sm:mb-2">
                 Last Gatepass
               </h3>
-              <div className="text-base text-slate-700">
+              <div className="text-xs sm:text-base text-slate-700">
                 {lastGatepass ? (
                   <>
                     <div>
@@ -139,29 +170,13 @@ const Dashboard = () => {
                         {lastGatepass.status}
                       </span>
                     </div>
-                    <div className="mt-1 text-sm text-slate-400">
+                    <div className="mt-1 text-xs sm:text-sm text-slate-400">
                       {lastGatepass.date} {lastGatepass.time}
                     </div>
                   </>
                 ) : (
                   <span className="text-slate-400">No gatepass found.</span>
                 )}
-              </div>
-            </div>
-            <div className="bg-red-100 rounded-xl shadow p-6 flex flex-col h-full justify-center">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
-                Active SOS Alerts
-              </h3>
-              <div className="text-3xl font-bold text-slate-900">
-                {activeSOS}
-              </div>
-            </div>
-            <div className="bg-pink-300 rounded-xl shadow p-6 flex flex-col h-full justify-center">
-              <h3 className="text-indigo-900 font-semibold text-lg mb-2">
-                Active Polls
-              </h3>
-              <div className="text-3xl font-bold text-slate-900">
-                {unrespondedPolls}
               </div>
             </div>
           </div>
@@ -181,7 +196,8 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen mt-20">
-      <nav className="w-52 bg-white py-5 flex flex-col items-center shadow-md ">
+      {/* Side nav for desktop, hidden on mobile */}
+      <nav className="w-52 bg-white py-5 flex-col items-center shadow-md hidden md:flex">
         {menuItems.map((item) => (
           <button
             key={item.key}
@@ -197,7 +213,42 @@ const Dashboard = () => {
           </button>
         ))}
       </nav>
-      <main className="flex-1 p-8 overflow-y-auto">{renderContent()}</main>
+      {/* Mobile nav drawer */}
+      {navOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex md:hidden">
+          <div className="w-3/4 max-w-xs bg-white py-8 px-4 shadow-lg h-full flex flex-col">
+            <button
+              className="self-end mb-4 text-2xl text-gray-500 hover:text-black"
+              onClick={() => setNavOpen(false)}
+              aria-label="Close navigation menu"
+            >
+              &times;
+            </button>
+            {menuItems.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setSelected(item.key);
+                  setNavOpen(false);
+                }}
+                className={`w-full my-2 px-3 py-3 rounded-lg flex items-center transition-colors duration-200 text-base font-medium ${
+                  selected === item.key
+                    ? "text-yellow-400 bg-black font-bold "
+                    : "text-black bg-yellow-400"
+                } hover:text-yellow-500 hover:bg-black shadow-md`}
+              >
+                <span className="text-2xl mr-3">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+          {/* Click outside to close */}
+          <div className="flex-1" onClick={() => setNavOpen(false)}></div>
+        </div>
+      )}
+      <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
+        {renderContent()}
+      </main>
       <button
         className="fixed bottom-8 right-8 bg-red-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl z-50 hover:bg-red-700"
         onClick={() => setShowSOSModal(true)}
@@ -322,6 +373,7 @@ const ComplaintsSection = ({ selected }) => {
   const [loadingAction, setLoadingAction] = useState(false);
   const [error, setError] = useState("");
   // const { user } = useAuth(); // Not used
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   useEffect(() => {
     if (selected !== "complaints") return;
@@ -407,61 +459,102 @@ const ComplaintsSection = ({ selected }) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-2">
-          {tabOptions.map((option) => (
-            <button
-              key={option.key}
-              onClick={() => setTab(option.key)}
-              className={`px-4 py-2 rounded-full border-none text-base mr-1 transition-colors duration-200 font-medium ${
-                tab === option.key
-                  ? "bg-indigo-500 text-white font-bold"
-                  : "bg-indigo-100 text-indigo-900"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+      {/* Responsive filter/add for mobile, original for desktop */}
+      <div className="mb-6">
+        {/* Mobile: filter and add buttons */}
+        <div className="flex sm:hidden justify-between items-center gap-2">
+          <button
+            className="bg-indigo-500 text-white rounded-lg px-3 py-1 font-semibold text-sm flex-1 mr-2"
+            onClick={() => setShowMobileFilter((v) => !v)}
+          >
+            Filter
+          </button>
+          <button
+            className="bg-green-500 text-white rounded-lg px-3 py-1 font-semibold text-sm flex-1 ml-2"
+            onClick={() => setShowModal(true)}
+          >
+            Add
+          </button>
         </div>
-        <button
-          className="bg-green-500 text-white border-none rounded-lg px-5 py-2 font-semibold text-base cursor-pointer shadow-sm hover:bg-green-600 transition-colors duration-200"
-          onClick={() => setShowModal(true)}
-        >
-          + New Complaint
-        </button>
+        {/* Mobile: filter options popover */}
+        {showMobileFilter && (
+          <div className="flex sm:hidden gap-2 mt-2 justify-center animate-fade-in">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => {
+                  setTab(option.key);
+                  setShowMobileFilter(true);
+                }}
+                className={`px-3 py-1 rounded-full border-none text-sm font-medium transition-colors duration-200 ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {/* Desktop: original tab and new complaint button */}
+        <div className="hidden sm:flex flex-row justify-between items-center">
+          <div className="flex gap-2 flex-wrap">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => setTab(option.key)}
+                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full border-none text-sm sm:text-base mr-1 transition-colors duration-200 font-medium ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="bg-green-500 text-white border-none rounded-lg px-4 sm:px-5 py-1 sm:py-2 font-semibold text-sm sm:text-base cursor-pointer shadow-sm hover:bg-green-600 transition-colors duration-200 ml-2"
+            onClick={() => setShowModal(true)}
+          >
+            + New Complaint
+          </button>
+        </div>
       </div>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
+      {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
       <div className="mt-2">
         {loadingFetch ? (
           <div className="text-gray-500 italic p-6">Loading...</div>
         ) : filtered.length === 0 ? (
           <div className="text-gray-500 italic p-6">No complaints found.</div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {filtered.map((c) => (
               <div
                 key={c._id}
-                className="flex items-center justify-between  rounded-xl shadow-xl p-4 bg-yellow-100"
+                className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-yellow-100"
               >
-                <div className="flex flex-col ">
-                  <div className="font-semibold text-lg">{c.title}</div>
-                  <div className="text-sm text-gray-600 flex flex-col ">
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="font-semibold text-base sm:text-lg truncate">
+                    {c.title}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600 flex flex-col ">
                     <span className="mr-2">Category: {c.category}</span>
                     <span className="mr-2">Urgency: {c.urgency}</span>
-
                     <span className="mr-2">Date: {c.date}</span>
                   </div>
-                  <div className="mt-1 text-gray-700">
-                    Description:{c.description}
+                  <div className="mt-1 text-gray-700 text-xs sm:text-sm break-words">
+                    Description: {c.description}
                   </div>
                 </div>
                 {c.status === "open" ? (
-                  <div className="flex flex-col gap-2 ml-4 items-end">
-                    <span className="capitalize font-semibold text-white bg-yellow-400 rounded-full px-2 py-1">
+                  <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
+                    <span className="capitalize font-semibold text-xs sm:text-base text-white bg-yellow-400 rounded-full px-2 py-1">
                       {c.status}
                     </span>
                     <button
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white px-2 sm:px-3 py-1 rounded hover:bg-red-600 text-xs sm:text-base"
                       onClick={() => handleDelete(c._id)}
                       disabled={loadingAction}
                     >
@@ -469,9 +562,9 @@ const ComplaintsSection = ({ selected }) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="ml-4 items-end flex flex-col">
+                  <div className="ml-4 items-end flex flex-col gap-2 min-w-fit">
                     <span
-                      className={`capitalize font-semibold ${
+                      className={`capitalize font-semibold text-xs sm:text-base ${
                         c.status === "in progress"
                           ? "text-white bg-blue-400 rounded-full px-2 py-1"
                           : "text-white bg-green-400 rounded-full px-2 py-1"
@@ -489,27 +582,33 @@ const ComplaintsSection = ({ selected }) => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
-            <h2 className="text-xl font-bold mb-4">New Complaint</h2>
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-xs sm:max-w-md p-4 sm:p-8 relative overflow-y-auto max-h-[90vh]">
+            <h2 className="text-base sm:text-xl font-bold mb-4">
+              New Complaint
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block font-medium mb-1">Title</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Title
+                </label>
                 <input
                   type="text"
                   name="title"
                   value={form.title}
                   onChange={handleInputChange}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">Urgency</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Urgency
+                </label>
                 <select
                   name="urgency"
                   value={form.urgency}
                   onChange={handleInputChange}
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -517,12 +616,14 @@ const ComplaintsSection = ({ selected }) => {
                 </select>
               </div>
               <div>
-                <label className="block font-medium mb-1">Category</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Category
+                </label>
                 <select
                   name="category"
                   value={form.category}
                   onChange={handleInputChange}
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   <option value="general">General</option>
                   <option value="maintenance">Maintenance</option>
@@ -532,20 +633,22 @@ const ComplaintsSection = ({ selected }) => {
                 </select>
               </div>
               <div>
-                <label className="block font-medium mb-1">Description</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Description
+                </label>
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleInputChange}
                   rows={3}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
-              <div className="flex justify-end gap-3 pt-2">
+              <div className="flex justify-end gap-2 sm:gap-3 pt-2">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300"
+                  className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-slate-200 text-slate-700 font-semibold text-sm sm:text-base hover:bg-slate-300"
                   onClick={() => setShowModal(false)}
                   disabled={loadingAction}
                 >
@@ -553,7 +656,7 @@ const ComplaintsSection = ({ selected }) => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
+                  className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-indigo-600 text-white font-semibold text-sm sm:text-base hover:bg-indigo-700"
                   disabled={loadingAction}
                 >
                   {loadingAction ? "Submitting..." : "Submit"}
@@ -582,6 +685,7 @@ const GatepassSection = ({ selected }) => {
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [loadingAction, setLoadingAction] = useState(false);
   const [error, setError] = useState("");
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   useEffect(() => {
     if (selected !== "gatepass") return;
@@ -665,57 +769,96 @@ const GatepassSection = ({ selected }) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-2">
-          {tabOptions.map((option) => (
-            <button
-              key={option.key}
-              onClick={() => setTab(option.key)}
-              className={`px-4 py-2 rounded-full border-none text-base mr-1 transition-colors duration-200 font-medium ${
-                tab === option.key
-                  ? "bg-indigo-500 text-white font-bold"
-                  : "bg-indigo-100 text-indigo-900"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+      {/* Responsive filter/add for mobile, original for desktop */}
+      <div className="mb-6">
+        {/* Mobile: filter and add buttons */}
+        <div className="flex sm:hidden justify-between items-center gap-2">
+          <button
+            className="bg-indigo-500 text-white rounded-lg px-3 py-1 font-semibold text-sm flex-1 mr-2"
+            onClick={() => setShowMobileFilter((v) => !v)}
+          >
+            Filter
+          </button>
+          <button
+            className="bg-green-500 text-white rounded-lg px-3 py-1 font-semibold text-sm flex-1 ml-2"
+            onClick={() => setShowModal(true)}
+          >
+            Add
+          </button>
         </div>
-        <button
-          className="bg-blue-500 text-white border-none rounded-lg px-5 py-2 font-semibold text-base cursor-pointer shadow-sm hover:bg-blue-600 transition-colors duration-200"
-          onClick={() => setShowModal(true)}
-        >
-          Request Gatepass
-        </button>
+        {/* Mobile: filter options popover */}
+        {showMobileFilter && (
+          <div className="flex sm:hidden gap-2 mt-2 justify-center animate-fade-in">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => {
+                  setTab(option.key);
+                  setShowMobileFilter(false);
+                }}
+                className={`px-3 py-1 rounded-full border-none text-sm font-medium transition-colors duration-200 ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {/* Desktop: original tab and new gatepass button */}
+        <div className="hidden sm:flex flex-row justify-between items-center">
+          <div className="flex gap-2 flex-wrap">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => setTab(option.key)}
+                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full border-none text-sm sm:text-base mr-1 transition-colors duration-200 font-medium ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="bg-green-500 text-white border-none rounded-lg px-4 sm:px-5 py-1 sm:py-2 font-semibold text-sm sm:text-base cursor-pointer shadow-sm hover:bg-green-600 transition-colors duration-200 ml-2"
+            onClick={() => setShowModal(true)}
+          >
+            + New Gatepass
+          </button>
+        </div>
       </div>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
+      {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
       <div className="mt-2">
         {loadingFetch ? (
           <div className="text-gray-500 italic p-6">Loading...</div>
         ) : filtered.length === 0 ? (
           <div className="text-gray-500 italic p-6">No gatepasses found.</div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {filtered.map((g) => (
               <div
                 key={g._id}
-                className="flex items-center justify-between bg-white rounded-xl shadow p-4"
+                className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-yellow-100 lg:min-h-[140px]"
               >
-                <div className="flex flex-col">
-                  <div className="font-semibold text-lg">
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="font-semibold text-base sm:text-lg truncate">
                     Visitor: {g.visitor}
                   </div>
-                  <div className="text-sm text-gray-600 flex flex-col">
+                  <div className="text-xs sm:text-sm text-gray-600 flex flex-col">
                     <span className="mr-2">Purpose: {g.purpose}</span>
                     <span className="mr-2">Comments: {g.comments}</span>
-
                     <span className="mr-2">Date: {g.date}</span>
                     <span className="mr-2">Time: {g.time}</span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 ml-4 items-end">
+                <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
                   <span
-                    className={`capitalize font-semibold ${
+                    className={`capitalize font-semibold text-xs sm:text-base ${
                       g.status === "pending"
                         ? "text-white bg-yellow-400 rounded-full px-2 py-1"
                         : g.status === "approved"
@@ -731,7 +874,7 @@ const GatepassSection = ({ selected }) => {
                   </span>
                   {(g.status === "pending" || g.status === "open") && (
                     <button
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white px-2 sm:px-3 py-1 rounded hover:bg-red-600 text-xs sm:text-base"
                       onClick={() => handleDelete(g._id)}
                       disabled={loadingAction}
                     >
@@ -747,22 +890,26 @@ const GatepassSection = ({ selected }) => {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
-            <h2 className="text-xl font-bold mb-4">Request Gatepass</h2>
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-xs sm:max-w-md p-4 sm:p-8 relative overflow-y-auto max-h-[90vh]">
+            <h2 className="text-base sm:text-xl font-bold mb-4">
+              New Gatepass
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block font-medium mb-1">Visitor Name</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Visitor Name
+                </label>
                 <input
                   type="text"
                   name="visitor"
                   value={form.visitor}
                   onChange={handleInputChange}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">
+                <label className="block font-medium mb-1 text-sm sm:text-base">
                   Comments for Guard
                 </label>
                 <input
@@ -770,11 +917,11 @@ const GatepassSection = ({ selected }) => {
                   name="comments"
                   value={form.comments}
                   onChange={handleInputChange}
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">
+                <label className="block font-medium mb-1 text-sm sm:text-base">
                   Purpose of Visit
                 </label>
                 <input
@@ -783,39 +930,43 @@ const GatepassSection = ({ selected }) => {
                   value={form.purpose}
                   onChange={handleInputChange}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">Visit Date</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Visit Date
+                </label>
                 <input
                   type="date"
                   name="date"
                   value={form.date}
                   onChange={handleInputChange}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 />
               </div>
               <div>
-                <label className="block font-medium mb-1">Visit Time</label>
+                <label className="block font-medium mb-1 text-sm sm:text-base">
+                  Visit Time
+                </label>
                 <input
                   type="time"
                   name="time"
                   value={form.time}
                   onChange={handleInputChange}
                   required
-                  className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   step="60"
                 />
                 <span className="text-xs text-slate-500">
                   (24-hour format, e.g., 14:30)
                 </span>
               </div>
-              <div className="flex justify-end gap-3 pt-2">
+              <div className="flex justify-end gap-2 sm:gap-3 pt-2">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300"
+                  className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-slate-200 text-slate-700 font-semibold text-sm sm:text-base hover:bg-slate-300"
                   onClick={() => setShowModal(false)}
                   disabled={loadingAction}
                 >
@@ -823,7 +974,7 @@ const GatepassSection = ({ selected }) => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
+                  className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-indigo-600 text-white font-semibold text-sm sm:text-base hover:bg-indigo-700"
                   disabled={loadingAction}
                 >
                   {loadingAction ? "Submitting..." : "Submit"}
@@ -842,6 +993,7 @@ const AnnouncementsSection = ({ selected }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   useEffect(() => {
     if (selected !== "announcements") return;
@@ -895,23 +1047,65 @@ const AnnouncementsSection = ({ selected }) => {
 
   return (
     <div>
-      <div className="flex gap-2 mb-6">
-        {tabOptions.map((option) => (
+      {/* Responsive filter/add for mobile, original for desktop */}
+      <div className="mb-6">
+        {/* Mobile: filter and add buttons */}
+        <div className="flex sm:hidden justify-between items-center gap-2 w-10">
           <button
-            key={option.key}
-            onClick={() => setTab(option.key)}
-            className={`px-4 py-2 rounded-full border-none text-base mr-1 transition-colors duration-200 font-medium ${
-              tab === option.key
-                ? "bg-indigo-500 text-white font-bold"
-                : "bg-indigo-100 text-indigo-900"
-            }`}
+            className="bg-indigo-500 text-white rounded-lg px-3 py-1 font-semibold text-sm flex-1 mr-2"
+            onClick={() => setShowMobileFilter((v) => !v)}
           >
-            {option.label}
+            Filter
           </button>
-        ))}
+        </div>
+        {/* Mobile: filter options popover */}
+        {showMobileFilter && (
+          <div className="flex sm:hidden gap-2 mt-2 justify-start items-center animate-fade-in">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => {
+                  setTab(option.key);
+                  setShowMobileFilter(false);
+                }}
+                className={`px-3 py-1 rounded-full border-none text-sm font-medium transition-colors duration-200 ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {/* Desktop: original tab and add button (disabled) */}
+        <div className="hidden sm:flex flex-row justify-between items-center">
+          <div className="flex gap-2 flex-wrap">
+            {tabOptions.map((option) => (
+              <button
+                key={option.key}
+                onClick={() => setTab(option.key)}
+                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full border-none text-sm sm:text-base mr-1 transition-colors duration-200 font-medium ${
+                  tab === option.key
+                    ? "bg-indigo-500 text-white font-bold"
+                    : "bg-indigo-100 text-indigo-900"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="bg-green-500 text-white border-none rounded-lg px-4 sm:px-5 py-1 sm:py-2 font-semibold text-sm sm:text-base cursor-not-allowed opacity-50 ml-2"
+            disabled
+          >
+            + Add
+          </button>
+        </div>
       </div>
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      <div className="space-y-4">
+      {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
+      <div className="mt-2">
         {loading ? (
           <div className="text-gray-500 italic p-6">
             Loading announcements...
@@ -921,22 +1115,45 @@ const AnnouncementsSection = ({ selected }) => {
             No announcements found.
           </div>
         ) : (
-          filtered.map((a) => (
-            <div
-              key={a._id}
-              className={`border-l-4 p-4 rounded shadow-sm ${
-                typeStyles[a.type] ||
-                "border-slate-300 bg-slate-50 text-slate-900"
-              }`}
-            >
-              <div className="font-semibold text-lg mb-1">{a.title}</div>
-              <div className="text-base">{a.message}</div>
-              <div className="text-xs text-gray-500 mt-2">
-                By: {a.author?.name || "Admin"} •{" "}
-                {new Date(a.createdAt).toLocaleDateString()}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {filtered.map((a) => (
+              <div
+                key={a._id}
+                className={`flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 lg:min-h-[140px] ${
+                  typeStyles[a.type] ||
+                  "border-slate-300 bg-slate-50 text-slate-900"
+                }`}
+              >
+                <div className="flex flex-col flex-1 min-w-0">
+                  <div className="font-semibold text-base sm:text-lg truncate mb-1">
+                    {a.title}
+                  </div>
+                  <div className="text-xs sm:text-sm break-words mb-1">
+                    {a.message}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-auto">
+                    By: {a.author?.name || "Admin"} •{" "}
+                    {new Date(a.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
+                  <span
+                    className={`capitalize font-semibold text-xs sm:text-base ${
+                      a.type === "info"
+                        ? "text-blue-900 bg-blue-200"
+                        : a.type === "warning"
+                        ? "text-yellow-900 bg-yellow-200"
+                        : a.type === "error"
+                        ? "text-red-900 bg-red-200"
+                        : "text-slate-900 bg-slate-200"
+                    } rounded-full px-2 py-1`}
+                  >
+                    {a.type || "info"}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -970,6 +1187,7 @@ const CommunitySection = () => {
   const [pollsLoading, setPollsLoading] = useState(false);
   const [pollsError, setPollsError] = useState("");
   const [voting, setVoting] = useState({});
+  const [showHistoryFilter, setShowHistoryFilter] = useState(false);
 
   useEffect(() => {
     if (section === "service") {
@@ -1183,34 +1401,40 @@ const CommunitySection = () => {
               Booking History
             </button>
           </div>
+          {/* Book New Service button at top for both tabs */}
           {bookingTab === "upcoming" && (
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Upcoming Bookings</h3>
-              {upcoming.length === 0 ? (
-                <div className="text-gray-500 italic p-6">
-                  No upcoming bookings.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {upcoming.map((b) => (
-                    <div
-                      key={b._id}
-                      className="bg-white rounded-2xl shadow p-6 flex flex-col min-w-0 relative"
-                    >
-                      <div className="flex items-center gap-4 mb-2">
-                        <span className="text-3xl text-blue-500">
-                          <i className="fa-solid fa-people-group"></i>
-                        </span>
-                        <div>
-                          <div className="font-bold text-lg text-black">
-                            {b.provider?.name || "service"}
-                          </div>
-                          <div className="text-gray-600 text-base">
-                            {b.service}
-                          </div>
-                        </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <h3 className="font-semibold text-lg mb-0">Upcoming Bookings</h3>
+              <button
+                className="bg-indigo-600 text-white border-none rounded-lg px-4 py-2 font-semibold text-sm sm:text-base cursor-pointer shadow-sm hover:bg-indigo-700 transition-colors duration-200 ml-2"
+                onClick={() => setShowModal(true)}
+              >
+                Book New Service
+              </button>
+            </div>
+          )}
+          {bookingTab === "upcoming" &&
+            (loading ? (
+              <div className="text-gray-500 italic p-6">Loading...</div>
+            ) : upcoming.length === 0 ? (
+              <div className="text-gray-500 italic p-6">
+                No upcoming bookings.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {upcoming.map((b) => (
+                  <div
+                    key={b._id}
+                    className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-white min-h-[140px]"
+                  >
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-bold text-base sm:text-lg text-black truncate mb-1">
+                        {b.provider?.name || "service"}
                       </div>
-                      <div className="flex justify-between items-center mt-4 text-gray-700 text-sm">
+                      <div className="text-xs sm:text-sm text-gray-600 mb-1">
+                        {b.service}
+                      </div>
+                      <div className="flex justify-between items-center mt-2 text-gray-700 text-xs sm:text-sm">
                         <div className="flex items-center gap-2">
                           <i className="fa-regular fa-calendar"></i>
                           <span>{new Date(b.date).toLocaleDateString()}</span>
@@ -1220,8 +1444,10 @@ const CommunitySection = () => {
                           <span>{b.time}</span>
                         </div>
                       </div>
+                    </div>
+                    <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
                       <span
-                        className={`absolute bottom-4 right-4 capitalize font-semibold ${
+                        className={`capitalize font-semibold text-xs sm:text-base ${
                           b.status === "pending"
                             ? "text-white bg-yellow-400 rounded-full px-2 py-1"
                             : b.status === "accepted"
@@ -1236,66 +1462,84 @@ const CommunitySection = () => {
                         {b.status}
                       </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {bookingTab === "history" && (
-            <div>
-              <div className="flex gap-2 mb-2">
-                {historyTabOptions.map((tab) => (
-                  <button
-                    key={tab}
-                    className={`px-4 py-2 rounded-full border-none text-base transition-colors duration-200 font-medium ${
-                      historyTab === tab
-                        ? "bg-green-500 text-white font-bold"
-                        : "bg-green-100 text-green-900"
-                    }`}
-                    onClick={() => setHistoryTab(tab)}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </button>
+                  </div>
                 ))}
               </div>
+            ))}
+          {/* Booking History Tab */}
+          {bookingTab === "history" && (
+            <>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <div className="flex gap-2 items-center">
+                  <button
+                    className="bg-indigo-500 text-white rounded-lg px-3 py-1 font-semibold text-sm"
+                    onClick={() => setShowHistoryFilter((v) => !v)}
+                  >
+                    Filter
+                  </button>
+                  <button
+                    className="bg-indigo-600 text-white border-none rounded-lg px-4 py-2 font-semibold text-sm sm:text-base cursor-pointer shadow-sm hover:bg-indigo-700 transition-colors duration-200"
+                    onClick={() => setShowModal(true)}
+                  >
+                    Book New Service
+                  </button>
+                </div>
+                {showHistoryFilter && (
+                  <div className="flex gap-2 ml-4 animate-fade-in">
+                    {historyTabOptions.map((tabOpt) => (
+                      <button
+                        key={tabOpt}
+                        className={`px-3 py-1 rounded-full border-none text-sm font-medium transition-colors duration-200 ${
+                          historyTab === tabOpt
+                            ? "bg-indigo-500 text-white font-bold"
+                            : "bg-indigo-100 text-indigo-900"
+                        }`}
+                        onClick={() => {
+                          setHistoryTab(tabOpt);
+                          setShowHistoryFilter(false);
+                        }}
+                      >
+                        {tabOpt.charAt(0).toUpperCase() + tabOpt.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <h3 className="font-semibold text-lg mb-2">Booking History</h3>
-              {filteredHistory.length === 0 ? (
+              {loading ? (
+                <div className="text-gray-500 italic p-6">Loading...</div>
+              ) : filteredHistory.length === 0 ? (
                 <div className="text-gray-500 italic p-6">
                   No bookings found.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {filteredHistory.map((b) => (
                     <div
                       key={b._id}
-                      className="bg-white rounded-2xl shadow p-6 flex flex-col min-w-0 relative"
+                      className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-white min-h-[140px]"
                     >
-                      <div className="flex items-center gap-4 mb-2">
-                        <span className="text-3xl text-blue-500">
-                          <i className="fa-solid fa-people-group"></i>
-                        </span>
-                        <div>
-                          <div className="font-bold text-lg text-black">
-                            {b.provider?.name || "service"}
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <div className="font-bold text-base sm:text-lg text-black truncate mb-1">
+                          {b.provider?.name || "service"}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-600 mb-1">
+                          {b.service}
+                        </div>
+                        <div className="flex justify-between items-center mt-2 text-gray-700 text-xs sm:text-sm">
+                          <div className="flex items-center gap-2">
+                            <i className="fa-regular fa-calendar"></i>
+                            <span>{new Date(b.date).toLocaleDateString()}</span>
                           </div>
-                          <div className="text-gray-600 text-base">
-                            {b.service}
+                          <div className="flex items-center gap-2">
+                            <i className="fa-regular fa-clock"></i>
+                            <span>{b.time}</span>
                           </div>
                         </div>
                       </div>
-                      <div className="flex justify-between items-center mt-4 text-gray-700 text-sm">
-                        <div className="flex items-center gap-2">
-                          <i className="fa-regular fa-calendar"></i>
-                          <span>{new Date(b.date).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <i className="fa-regular fa-clock"></i>
-                          <span>{b.time}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 absolute bottom-4 right-4">
+                      <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
                         <span
-                          className={`capitalize font-semibold ${
+                          className={`capitalize font-semibold text-xs sm:text-base ${
                             b.completed
                               ? "text-white bg-green-400 rounded-full px-2 py-1"
                               : b.status === "pending"
@@ -1311,7 +1555,7 @@ const CommunitySection = () => {
                         </span>
                         {b.status === "accepted" && !b.completed && (
                           <button
-                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs sm:text-base"
                             onClick={() => handleMarkCompleted(b._id)}
                             disabled={loading}
                           >
@@ -1323,24 +1567,18 @@ const CommunitySection = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </>
           )}
-          <div className="flex justify-end">
-            <button
-              className="bg-indigo-600 text-white border-none rounded-lg px-5 py-2 font-semibold text-base cursor-pointer shadow-sm hover:bg-indigo-700 transition-colors duration-200"
-              onClick={() => setShowModal(true)}
-            >
-              Book New Service
-            </button>
-          </div>
           {/* Modal */}
           {showModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-              <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
-                <h2 className="text-xl font-bold mb-4">Book New Service</h2>
+              <div className="bg-white rounded-xl shadow-lg w-full max-w-xs sm:max-w-md p-4 sm:p-8 relative overflow-y-auto max-h-[90vh]">
+                <h2 className="text-base sm:text-xl font-bold mb-4">
+                  Book New Service
+                </h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block font-medium mb-1">
+                    <label className="block font-medium mb-1 text-sm sm:text-base">
                       Service Provider Name
                     </label>
                     <select
@@ -1348,7 +1586,7 @@ const CommunitySection = () => {
                       value={form.provider}
                       onChange={handleProviderChange}
                       required
-                      className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                       <option value="">Select provider</option>
                       {providers.map((p) => (
@@ -1359,13 +1597,15 @@ const CommunitySection = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-medium mb-1">Service</label>
+                    <label className="block font-medium mb-1 text-sm sm:text-base">
+                      Service
+                    </label>
                     <select
                       name="service"
                       value={form.service}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                       disabled={!form.provider}
                     >
                       <option value="">Select service</option>
@@ -1377,46 +1617,52 @@ const CommunitySection = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block font-medium mb-1">Date</label>
+                    <label className="block font-medium mb-1 text-sm sm:text-base">
+                      Date
+                    </label>
                     <input
                       type="date"
                       name="date"
                       value={form.date}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     />
                   </div>
                   <div>
-                    <label className="block font-medium mb-1">Time</label>
+                    <label className="block font-medium mb-1 text-sm sm:text-base">
+                      Time
+                    </label>
                     <input
                       type="time"
                       name="time"
                       value={form.time}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full border border-slate-300 rounded px-2 sm:px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-indigo-400"
                       step="60"
                     />
                   </div>
-                  <div className="flex justify-end gap-3 pt-2">
+                  <div className="flex justify-end gap-2 sm:gap-3 pt-2">
                     <button
                       type="button"
-                      className="px-4 py-2 rounded bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300"
+                      className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-slate-200 text-slate-700 font-semibold text-sm sm:text-base hover:bg-slate-300"
                       onClick={() => setShowModal(false)}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
+                      className="px-3 sm:px-4 py-1 sm:py-2 rounded bg-indigo-600 text-white font-semibold text-sm sm:text-base hover:bg-indigo-700"
                       disabled={loading}
                     >
                       {loading ? "Submitting..." : "Submit"}
                     </button>
                   </div>
+                  {error && (
+                    <div className="text-red-500 mt-2 text-sm">{error}</div>
+                  )}
                 </form>
-                {error && <div className="text-red-500 mt-2">{error}</div>}
               </div>
             </div>
           )}

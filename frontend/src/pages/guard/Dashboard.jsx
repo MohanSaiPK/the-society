@@ -253,15 +253,15 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="p-6 mt-20">
-      <div className="flex gap-4 mb-6 border-b">
+    <div className="p-2 sm:p-6 mt-14 max-w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 border-b w-full max-w-2xl mx-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
-            className={`pb-2 px-4 font-semibold ${
+            className={`py-2 px-2 sm:px-3 text-sm sm:text-base font-semibold rounded transition-colors duration-150 w-full text-center ${
               activeTab === tab
-                ? "border-b-2 border-blue-500 text-blue-600"
-                : "text-gray-500"
+                ? "border-b-2 border-blue-500 text-blue-600 bg-blue-50"
+                : "text-gray-500 hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -272,61 +272,59 @@ const Dashboard = () => {
 
       {/* Pending Gatepasses Tab */}
       {activeTab === "Pending Gatepasses" && (
-        <div className="overflow-x-auto">
+        <div className="">
           {gatepassError && (
             <div className="text-red-500 mb-2">{gatepassError}</div>
           )}
           {gatepassLoading ? (
             <div className="text-gray-500 italic">Loading...</div>
           ) : (
-            <table className="min-w-full bg-white border rounded shadow">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border">Visitor</th>
-                  <th className="py-2 px-4 border">Purpose</th>
-                  <th className="py-2 px-4 border">Time</th>
-                  <th className="py-2 px-4 border">Resident Name</th>
-                  <th className="py-2 px-4 border">House No</th>
-                  <th className="py-2 px-4 border">Status</th>
-                  <th className="py-2 px-4 border">Review</th>
-                </tr>
-              </thead>
-              <tbody>
-                {gatepasses
-                  .filter((g) => g.status === "pending")
-                  .map((row) => (
-                    <tr key={row._id}>
-                      <td className="py-2 px-4 border">{row.visitor}</td>
-                      <td className="py-2 px-4 border">{row.purpose}</td>
-                      <td className="py-2 px-4 border">{row.time}</td>
-                      <td className="py-2 px-4 border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {gatepasses
+                .filter((g) => g.status === "pending")
+                .map((row) => (
+                  <div
+                    key={row._id}
+                    className="bg-yellow-100 border rounded-lg shadow-xl p-6 flex flex-col justify-between relative"
+                  >
+                    {/* Status Badge */}
+                    <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                      Pending
+                    </span>
+                    <div className="mb-4">
+                      <div className="mb-2">
+                        <b>Visitor:</b> {row.visitor}
+                      </div>
+                      <div className="mb-2">
+                        <b>Purpose:</b> {row.purpose}
+                      </div>
+                      <div className="mb-2">
+                        <b>Time:</b> {row.time}
+                      </div>
+                      <div className="mb-2">
+                        <b>Resident Name:</b>{" "}
                         {row.user?.name ||
                           row.residentName ||
                           row.resident ||
                           "-"}
-                      </td>
-                      <td className="py-2 px-4 border">{row.houseNo}</td>
-                      <td className="py-2 px-4 border text-yellow-600">
-                        {row.status}
-                      </td>
-                      <td className="py-2 px-4 border">
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded"
-                          onClick={() =>
-                            setReviewModal({ open: true, data: row })
-                          }
-                        >
-                          Review
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                      </div>
+                      <div className="mb-2">
+                        <b>House No:</b> {row.houseNo}
+                      </div>
+                    </div>
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded self-start w-fit "
+                      onClick={() => setReviewModal({ open: true, data: row })}
+                    >
+                      Review
+                    </button>
+                  </div>
+                ))}
+            </div>
           )}
           {reviewModal.open && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+            <div className="fixed inset-0  bg-black bg-opacity-40 flex items-center justify-center z-50">
+              <div className="bg-white mx-10 md:mx-0 rounded-lg p-6 w-full max-w-md shadow-lg">
                 <h2 className="text-lg font-bold mb-4">Review Gatepass</h2>
                 <div className="mb-2">
                   <b>Visitor:</b> {reviewModal.data.visitor}
@@ -399,81 +397,89 @@ const Dashboard = () => {
           {approvedTab === "Approved" && (
             <div>
               <h3 className="text-lg font-bold mb-2">Approved</h3>
-              <table className="min-w-full bg-white border rounded shadow">
-                <thead>
-                  <tr className="bg-green-100">
-                    <th className="py-2 px-4 border">Visitor</th>
-                    <th className="py-2 px-4 border">Purpose</th>
-                    <th className="py-2 px-4 border">Time</th>
-                    <th className="py-2 px-4 border">Resident Name</th>
-                    <th className="py-2 px-4 border">House No</th>
-                    <th className="py-2 px-4 border">Status</th>
-                    <th className="py-2 px-4 border">Comments</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {gatepasses
-                    .filter((g) => g.status === "approved")
-                    .map((row) => (
-                      <tr key={row._id}>
-                        <td className="py-2 px-4 border">{row.visitor}</td>
-                        <td className="py-2 px-4 border">{row.purpose}</td>
-                        <td className="py-2 px-4 border">{row.time}</td>
-                        <td className="py-2 px-4 border">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {gatepasses
+                  .filter((g) => g.status === "approved")
+                  .map((row) => (
+                    <div
+                      key={row._id}
+                      className="bg-green-100 border rounded-lg shadow-xl p-6 flex flex-col justify-between relative"
+                    >
+                      {/* Status Badge */}
+                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-300">
+                        Approved
+                      </span>
+                      <div className="mb-4">
+                        <div className="mb-2">
+                          <b>Visitor:</b> {row.visitor}
+                        </div>
+                        <div className="mb-2">
+                          <b>Purpose:</b> {row.purpose}
+                        </div>
+                        <div className="mb-2">
+                          <b>Time:</b> {row.time}
+                        </div>
+                        <div className="mb-2">
+                          <b>Resident Name:</b>{" "}
                           {row.user?.name ||
                             row.residentName ||
                             row.resident ||
                             "-"}
-                        </td>
-                        <td className="py-2 px-4 border">{row.houseNo}</td>
-                        <td className="py-2 px-4 border text-green-600">
-                          {row.status}
-                        </td>
-                        <td className="py-2 px-4 border">{row.guardComment}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                        </div>
+                        <div className="mb-2">
+                          <b>House No:</b> {row.houseNo}
+                        </div>
+                        <div className="mb-2">
+                          <b>Comments:</b> {row.guardComment}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
           {approvedTab === "Rejected" && (
             <div>
               <h3 className="text-lg font-bold mb-2">Rejected</h3>
-              <table className="min-w-full bg-white border rounded shadow">
-                <thead>
-                  <tr className="bg-red-100">
-                    <th className="py-2 px-4 border">Visitor</th>
-                    <th className="py-2 px-4 border">Purpose</th>
-                    <th className="py-2 px-4 border">Time</th>
-                    <th className="py-2 px-4 border">Resident Name</th>
-                    <th className="py-2 px-4 border">House No</th>
-                    <th className="py-2 px-4 border">Status</th>
-                    <th className="py-2 px-4 border">Comments</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {gatepasses
-                    .filter((g) => g.status === "rejected")
-                    .map((row) => (
-                      <tr key={row._id}>
-                        <td className="py-2 px-4 border">{row.visitor}</td>
-                        <td className="py-2 px-4 border">{row.purpose}</td>
-                        <td className="py-2 px-4 border">{row.time}</td>
-                        <td className="py-2 px-4 border">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {gatepasses
+                  .filter((g) => g.status === "rejected")
+                  .map((row) => (
+                    <div
+                      key={row._id}
+                      className="bg-red-100 border rounded-lg shadow-xl p-6 flex flex-col justify-between relative"
+                    >
+                      {/* Status Badge */}
+                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-300">
+                        Rejected
+                      </span>
+                      <div className="mb-4">
+                        <div className="mb-2">
+                          <b>Visitor:</b> {row.visitor}
+                        </div>
+                        <div className="mb-2">
+                          <b>Purpose:</b> {row.purpose}
+                        </div>
+                        <div className="mb-2">
+                          <b>Time:</b> {row.time}
+                        </div>
+                        <div className="mb-2">
+                          <b>Resident Name:</b>{" "}
                           {row.user?.name ||
                             row.residentName ||
                             row.resident ||
                             "-"}
-                        </td>
-                        <td className="py-2 px-4 border">{row.houseNo}</td>
-                        <td className="py-2 px-4 border text-red-600">
-                          {row.status}
-                        </td>
-                        <td className="py-2 px-4 border">{row.guardComment}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                        </div>
+                        <div className="mb-2">
+                          <b>House No:</b> {row.houseNo}
+                        </div>
+                        <div className="mb-2">
+                          <b>Comments:</b> {row.guardComment}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
         </div>
@@ -481,7 +487,7 @@ const Dashboard = () => {
 
       {/* Visitor Log Tab */}
       {activeTab === "Visitor Log" && (
-        <div className="overflow-x-auto">
+        <div className="">
           <button
             className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             onClick={() => setShowVisitorModal(true)}
@@ -494,26 +500,30 @@ const Dashboard = () => {
           {visitorLogLoading ? (
             <div className="text-gray-500 italic">Loading...</div>
           ) : (
-            <table className="min-w-full bg-white border rounded shadow">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border">Visitor</th>
-                  <th className="py-2 px-4 border">Visit Time</th>
-                  <th className="py-2 px-4 border">Resident</th>
-                  <th className="py-2 px-4 border">House No</th>
-                  <th className="py-2 px-4 border">Check-in</th>
-                  <th className="py-2 px-4 border">Check-out</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorLog.map((row) => (
-                  <tr key={row._id}>
-                    <td className="py-2 px-4 border">{row.visitor}</td>
-                    <td className="py-2 px-4 border">{row.visitTime}</td>
-                    <td className="py-2 px-4 border">{row.resident}</td>
-                    <td className="py-2 px-4 border">{row.houseNo}</td>
-                    <td className="py-2 px-4 border">{row.checkIn}</td>
-                    <td className="py-2 px-4 border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {visitorLog.map((row) => (
+                <div
+                  key={row._id}
+                  className="bg-white border rounded-lg shadow-xl p-6 flex flex-col justify-between"
+                >
+                  <div className="mb-4">
+                    <div className="mb-2">
+                      <b>Visitor:</b> {row.visitor}
+                    </div>
+                    <div className="mb-2">
+                      <b>Visit Time:</b> {row.visitTime}
+                    </div>
+                    <div className="mb-2">
+                      <b>Resident:</b> {row.resident}
+                    </div>
+                    <div className="mb-2">
+                      <b>House No:</b> {row.houseNo}
+                    </div>
+                    <div className="mb-2">
+                      <b>Check-in:</b> {row.checkIn}
+                    </div>
+                    <div className="mb-2">
+                      <b>Check-out:</b>{" "}
                       {row.checkOut ? (
                         row.checkOut
                       ) : (
@@ -524,11 +534,11 @@ const Dashboard = () => {
                           Checkout
                         </button>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
           {showVisitorModal && (
             <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -647,7 +657,7 @@ const Dashboard = () => {
           {/* Overview Tab */}
           {sosTab === "Overview" && (
             <div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div className="bg-white rounded-xl shadow p-6 flex flex-col items-center">
                   <div className="text-2xl font-bold">{sosAlerts.length}</div>
                   <div className="text-gray-700 mt-2">Total Alerts</div>

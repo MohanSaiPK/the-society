@@ -124,19 +124,19 @@ const Dashboard = () => {
       {activeTab === "Overview" && (
         <div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white p-4 rounded shadow text-center">
+            <div className="bg-yellow-100 p-4 rounded shadow-xl text-center">
               <div className="text-2xl font-bold">{stats.totalBookings}</div>
               <div className="text-gray-500">Total Bookings</div>
             </div>
-            <div className="bg-white p-4 rounded shadow text-center">
+            <div className="bg-blue-100 p-4 rounded shadow-xl text-center">
               <div className="text-2xl font-bold">{stats.pendingRequests}</div>
               <div className="text-gray-500">Pending Requests</div>
             </div>
-            <div className="bg-white p-4 rounded shadow text-center">
+            <div className="bg-green-100 p-4 rounded shadow-xl text-center">
               <div className="text-2xl font-bold">{stats.uniqueResidents}</div>
               <div className="text-gray-500">Unique Residents</div>
             </div>
-            <div className="bg-white p-4 rounded shadow text-center">
+            <div className="bg-pink-100 p-4 rounded shadow-xl text-center">
               <div className="text-2xl font-bold">{stats.thisMonth}</div>
               <div className="text-gray-500">This Month</div>
             </div>
@@ -156,35 +156,38 @@ const Dashboard = () => {
           </div>
           <div>
             <h4 className="font-bold mb-2">Recent History</h4>
-            <table className="min-w-full bg-white border rounded shadow">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="py-2 px-4 border">Resident Name</th>
-                  <th className="py-2 px-4 border">Service</th>
-                  <th className="py-2 px-4 border">Date & Time</th>
-                  <th className="py-2 px-4 border">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentHistory.map((row) => (
-                  <tr key={row._id}>
-                    <td className="py-2 px-4 border">{row.resident?.name}</td>
-                    <td className="py-2 px-4 border">{row.service}</td>
-                    <td className="py-2 px-4 border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {recentHistory.map((row) => (
+                <div
+                  key={row._id}
+                  className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-white min-h-[120px]"
+                >
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <div className="font-semibold text-base sm:text-lg truncate mb-1">
+                      {row.resident?.name}
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 mb-1">
+                      {row.service}
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 mb-1">
                       {new Date(row.date).toLocaleString()}
-                    </td>
-                    <td className="py-2 px-4 border">Completed</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
+                    <span className="capitalize font-semibold text-xs sm:text-base text-white bg-green-400 rounded-full px-2 py-1">
+                      Completed
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
       {/* Manage Bookings Tab */}
       {activeTab === "Manage Bookings" && (
-        <div>
+        <div className="flex flex-col gap-4 ">
           <div className="mb-4 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
             <input
               type="text"
@@ -224,131 +227,75 @@ const Dashboard = () => {
             </div>
             {loading && <div className="text-gray-500">Loading...</div>}
             {error && <div className="text-red-500 mb-2">{error}</div>}
-            {bookingTab === "Pending" && (
-              <div>
-                <h4 className="font-bold mb-2">Pending</h4>
-                <table className="min-w-full bg-white border rounded shadow">
-                  <thead>
-                    <tr className="bg-yellow-100">
-                      <th className="py-2 px-4 border">Resident Name</th>
-                      <th className="py-2 px-4 border">Service</th>
-                      <th className="py-2 px-4 border">Date & Time</th>
-                      <th className="py-2 px-4 border">Status</th>
-                      <th className="py-2 px-4 border">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredBookings
-                      .filter((b) => b.status === "pending")
-                      .map((row) => (
-                        <tr key={row._id}>
-                          <td className="py-2 px-4 border">
-                            {row.resident?.name}
-                          </td>
-                          <td className="py-2 px-4 border">{row.service}</td>
-                          <td className="py-2 px-4 border">
-                            {new Date(row.date).toLocaleString()}
-                          </td>
-                          <td className="py-2 px-4 border">
-                            {row.status.charAt(0).toUpperCase() +
-                              row.status.slice(1)}
-                          </td>
-                          <td className="py-2 px-4 border flex gap-2">
-                            <button
-                              className="bg-green-500 text-white px-2 py-1 rounded"
-                              title="Accept"
-                              onClick={() =>
-                                handleStatusChange(row._id, "accepted")
-                              }
-                              disabled={loading}
-                            >
-                              ✓
-                            </button>
-                            <button
-                              className="bg-red-500 text-white px-2 py-1 rounded"
-                              title="Reject"
-                              onClick={() =>
-                                handleStatusChange(row._id, "rejected")
-                              }
-                              disabled={loading}
-                            >
-                              ✗
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {bookingTab === "Accepted" && (
-              <div>
-                <h4 className="font-bold mb-2">Accepted</h4>
-                <table className="min-w-full bg-white border rounded shadow">
-                  <thead>
-                    <tr className="bg-green-100">
-                      <th className="py-2 px-4 border">Resident Name</th>
-                      <th className="py-2 px-4 border">Service</th>
-                      <th className="py-2 px-4 border">Date & Time</th>
-                      <th className="py-2 px-4 border">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredBookings
-                      .filter((b) => b.status === "accepted" && !b.completed)
-                      .map((row) => (
-                        <tr key={row._id}>
-                          <td className="py-2 px-4 border">
-                            {row.resident?.name}
-                          </td>
-                          <td className="py-2 px-4 border">{row.service}</td>
-                          <td className="py-2 px-4 border">
-                            {new Date(row.date).toLocaleString()}
-                          </td>
-                          <td className="py-2 px-4 border">
-                            {row.status.charAt(0).toUpperCase() +
-                              row.status.slice(1)}
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {bookingTab === "Rejected" && (
-              <div>
-                <h4 className="font-bold mb-2">Rejected</h4>
-                <table className="min-w-full bg-white border rounded shadow">
-                  <thead>
-                    <tr className="bg-red-100">
-                      <th className="py-2 px-4 border">Resident Name</th>
-                      <th className="py-2 px-4 border">Service</th>
-                      <th className="py-2 px-4 border">Date & Time</th>
-                      <th className="py-2 px-4 border">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredBookings
-                      .filter((b) => b.status === "rejected")
-                      .map((row) => (
-                        <tr key={row._id}>
-                          <td className="py-2 px-4 border">
-                            {row.resident?.name}
-                          </td>
-                          <td className="py-2 px-4 border">{row.service}</td>
-                          <td className="py-2 px-4 border">
-                            {new Date(row.date).toLocaleString()}
-                          </td>
-                          <td className="py-2 px-4 border">
-                            {row.status.charAt(0).toUpperCase() +
-                              row.status.slice(1)}
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            {/* Cards for each tab */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {filteredBookings
+                .filter((b) =>
+                  bookingTab === "Pending"
+                    ? b.status === "pending"
+                    : bookingTab === "Accepted"
+                    ? b.status === "accepted" && !b.completed
+                    : b.status === "rejected"
+                )
+                .map((row) => (
+                  <div
+                    key={row._id}
+                    className="flex flex-row items-start justify-between rounded-xl shadow-xl p-3 sm:p-4 bg-white min-h-[120px]"
+                  >
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="font-semibold text-base sm:text-lg truncate mb-1">
+                        {row.resident?.name}
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-600 mb-1">
+                        {row.service}
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-600 mb-1">
+                        {new Date(row.date).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 ml-4 items-end min-w-fit">
+                      <span
+                        className={`capitalize font-semibold text-xs sm:text-base ${
+                          row.status === "pending"
+                            ? "text-white bg-yellow-400"
+                            : row.status === "accepted"
+                            ? "text-white bg-green-400"
+                            : row.status === "rejected"
+                            ? "text-white bg-red-400"
+                            : "text-gray-700 bg-gray-200"
+                        } rounded-full px-2 py-1`}
+                      >
+                        {row.status.charAt(0).toUpperCase() +
+                          row.status.slice(1)}
+                      </span>
+                      {bookingTab === "Pending" && (
+                        <div className="flex gap-2">
+                          <button
+                            className="bg-green-500 text-white px-2 py-1 rounded"
+                            title="Accept"
+                            onClick={() =>
+                              handleStatusChange(row._id, "accepted")
+                            }
+                            disabled={loading}
+                          >
+                            ✓
+                          </button>
+                          <button
+                            className="bg-red-500 text-white px-2 py-1 rounded"
+                            title="Reject"
+                            onClick={() =>
+                              handleStatusChange(row._id, "rejected")
+                            }
+                            disabled={loading}
+                          >
+                            ✗
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       )}
