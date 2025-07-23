@@ -46,23 +46,26 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 ">
-      <div className="max-w-lg  mx-auto  p-10 border rounded-3xl justify-center items-center flex flex-col bg-black shadow-2xl ">
-        <div className="w-1/2 flex justify-center items-center ">
-          <img src={logo} alt="logo" className="w-1/2" />
+      <div className="mx-2 md:mx-10 max-w-xs md:max-w-lg p-3 md:p-10 border rounded-3xl justify-center items-center flex flex-col bg-black shadow-lg ">
+        <div className="w-1/3 md:w-1/2 flex justify-center items-center ">
+          <img src={logo} alt="logo" className="w-2/3 md:w-1/2" />
         </div>
-
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col w-full justify-center items-center"
+          className="flex flex-col w-full justify-center items-center gap-2 md:gap-3"
         >
-          <h2 className="text-xl text-yellow-400 font-bold mb-4">
+          <h2 className="text-lg md:text-xl text-yellow-400 font-bold mb-2 md:mb-4">
             Welcome Back!
           </h2>
-          {error && <div className="text-red-500 mb-2">{error}</div>}
+          {error && (
+            <div className="text-xs md:text-base text-red-500 mb-1 md:mb-2">
+              {error}
+            </div>
+          )}
           <input
             type="email"
             placeholder="Email"
-            className="w-full mb-2 p-2 border rounded"
+            className="w-full mb-1 md:mb-2 p-1 md:p-2 border rounded text-sm md:text-base"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -70,14 +73,14 @@ const Login = () => {
           <input
             type="password"
             placeholder="Password"
-            className="w-full mb-2 p-2 border rounded"
+            className="w-full mb-1 md:mb-2 p-1 md:p-2 border rounded text-sm md:text-base"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <select
             name="role"
-            className="w-full mb-2 p-2 border rounded"
+            className="w-full mb-1 md:mb-2 p-1 md:p-2 border rounded text-sm md:text-base"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
@@ -88,14 +91,14 @@ const Login = () => {
             <option value="admin">Admin</option>
           </select>
           <button
-            className="w-full bg-yellow-400 text-white py-2 rounded"
+            className="w-full bg-yellow-400 text-white py-1 md:py-2 rounded text-sm md:text-base"
             type="submit"
           >
             Login
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
+        <div className="mt-2 md:mt-4 text-center">
+          <p className="text-xs md:text-sm text-gray-600">
             Don't have an account?{" "}
             <Link to="/register" className="text-yellow-400 hover:underline">
               Register here
