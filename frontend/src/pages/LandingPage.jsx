@@ -17,7 +17,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   return (
     <div className="landing-page">
-      <div className="flex sm:h-screen justify-center items-start md:items-center mt-20 sm:mt-0">
+      <div className="flex sm:h-screen justify-center items-center mt-10 sm:mt-0">
         <div className="w-1/2 flex flex-col justify-center items-center gap-3 sm:gap-8 px-1 sm:px-0">
           <h1 className="font-ptSerif text-lg sm:text-6xl text-yellow-400 text-outline text-center sm:text-left">
             Welcome to Cee Towers
@@ -43,7 +43,7 @@ const LandingPage = () => {
             </button>
           </div>
         </div>
-        <div className="w-1/2 flex justify-end min-h-[400px] items-center px-1 sm:px-0">
+        <div className="w-1/2 flex justify-end min-h-[400px] items-end px-1 sm:px-0">
           <img
             src={LandImage}
             alt="Society Image"
@@ -52,8 +52,8 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="w-full flex flex-col items-center justify-center bg-gray-100 pb-4 sm:py-8 sm:mt-36">
-        <div className="part1 w-11/12 sm:w-4/5 flex flex-col items-center justify-center mb-4">
+      <div className="w-full flex flex-col items-center justify-center bg-gray-100 pb-4 sm:py-8 sm:mt-16">
+        <div className="part1 w-11/12 sm:w-4/5 flex flex-col items-center justify-center my-4 ">
           <h2 className="text-center text-base sm:text-2xl font-bold mt-4 sm:mt-8 font-ptSerif">
             Features
           </h2>
@@ -149,8 +149,8 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="footer bg-black w-full flex justify-center items-center py-4 sm:py-10 border-t border-gray-800 mt-4">
-        <div className="w-11/12 sm:w-3/4 flex sm:flex-row justify-start items-start sm:items-start gap-2 sm:gap-10">
+      <div className="footer bg-black w-full flex justify-center items-center pb-4 sm:py-10 border-t border-gray-800">
+        <div className="w-11/12 sm:w-3/4 flex sm:flex-row justify-start items-start mt-10 sm:items-start gap-2 sm:gap-10">
           <div className="w-full sm:w-1/3 flex flex-col justify-start items-start sm:items-start text-white mb-2 sm:mb-0 text-center sm:text-left text-xs sm:text-base">
             <h1 className="text-xs sm:text-lg font-bold mb-1 sm:mb-2 font-ptSerif">
               Cee Towers
