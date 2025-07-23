@@ -16,24 +16,24 @@ import { useNavigate } from "react-router-dom";
 const LandingPage = () => {
   const navigate = useNavigate();
   return (
-    <>
-      <div className="flex h-screen justify-between  text-white text-xl">
-        <div className="w-1/2 flex flex-col justify-center items-center gap-8">
-          <h1 className="font-ptSerif text-6xl text-yellow-400 text-outline start">
+    <div className="landing-page">
+      <div className="flex sm:h-screen justify-between items-start md:items-center text-white text-xs sm:text-xl mt-20 sm:mt-0">
+        <div className="w-1/2 flex flex-col justify-center items-center gap-3 sm:gap-8 px-1 sm:px-0">
+          <h1 className="font-ptSerif text-lg sm:text-6xl text-yellow-400 text-outline text-center sm:text-left">
             Welcome to Cee Towers
           </h1>
-          <p className=" text-black text-lg pl-20 mx-auto font-ptSerif ">
+          <p className="text-black text-xs sm:text-lg px-1 sm:pl-20 mx-auto font-ptSerif text-center sm:text-left">
             Manage your daily needs with ease book home services, raise
             maintenance requests, handle visitor passes, receive community
             updates, and send instant SOS alerts! <br /> All from one powerful
             platform.
           </p>
           <div>
-            <button className="mt-4 bg-yellow-400 text-black px-6 py-2 rounded">
+            <button className="mt-2 sm:mt-4 bg-yellow-400 text-black px-3 sm:px-6 py-1 sm:py-2 rounded text-xs sm:text-base">
               Know More
             </button>
             <button
-              className="mt-4 ml-4 bg-yellow-400 text-black px-6 py-2 rounded"
+              className="mt-2 sm:mt-4 ml-2 sm:ml-4 bg-yellow-400 text-black px-3 sm:px-6 py-1 sm:py-2 rounded text-xs sm:text-base"
               onClick={() => {
                 navigate("/register");
               }}
@@ -42,86 +42,98 @@ const LandingPage = () => {
             </button>
           </div>
         </div>
-        <div className="w-1/2 flex justify-right ">
+        <div className="w-1/2 flex justify-end items-center px-1 sm:px-0">
           <img
             src={LandImage}
             alt="Society Image"
-            className="w-full  justify-right"
+            className="w-4/5 sm:w-full max-w-[180px] sm:max-w-full object-contain"
           />
         </div>
       </div>
 
-      <div className="w-full flex flex-col items-center justify-center bg-gray-100 py-8 items-between">
-        <div className="part1 w-4/5">
-          <h2 className="text-center text-2xl font-bold mt-8">Features</h2>
-          <p className="text-black text-lg max-w-2xl mx-auto">
+      <div className="w-full flex flex-col items-center justify-center bg-gray-100 py-4 sm:py-8 mt-10 sm:mt-36">
+        <div className="part1 w-11/12 sm:w-4/5">
+          <h2 className="text-center text-base sm:text-2xl font-bold mt-4 sm:mt-8">
+            Features
+          </h2>
+          <p className="text-black text-xs sm:text-lg max-w-2xl mx-auto">
             Manage your daily needs with ease! book home services, raise
             maintenance requests, handle visitor passes, receive community
             updates, and send instant SOS alerts! All from one powerful
             platform.
           </p>
         </div>
-        <div className="part2 w-4/5 flex ">
-          <div className="col1 items-center justify-center flex flex-col w-1/2">
-            <div className=" flex items-center justify-center ">
-              <IoPeople />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">Home Services</h3>
-                <p className="text-gray-700 ">
+        <div className="part2 w-11/12 sm:w-4/5 flex flex-col sm:flex-row gap-3 sm:gap-6 mt-4 sm:mt-6">
+          <div className="col1 items-center justify-center flex flex-col w-full sm:w-1/2 gap-3 sm:gap-6">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <IoPeople className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
+                  Home Services
+                </h3>
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
               </div>
             </div>
-            <div className=" flex items-center justify-center ">
-              <GoAlertFill />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">Emergency SOS</h3>
-                <p className="text-gray-700 ">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <GoAlertFill className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
+                  Emergency SOS
+                </h3>
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
               </div>
             </div>
-            <div className=" flex items-center justify-center ">
-              <FaSquarePollVertical />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">Polls & Voting</h3>
-                <p className="text-gray-700 ">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <FaSquarePollVertical className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
+                  Polls & Voting
+                </h3>
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
               </div>
             </div>
           </div>
-          <div className="col2 items-center justify-center flex flex-col w-1/2">
-            <div className=" flex items-center justify-center ">
-              <FaTicketAlt />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">Digital Gatepass</h3>
-                <p className="text-gray-700 ">
+          <div className="col2 items-center justify-center flex flex-col w-full sm:w-1/2 gap-3 sm:gap-6">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <FaTicketAlt className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
+                  Digital Gatepass
+                </h3>
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
               </div>
             </div>
-            <div className=" flex items-center justify-center ">
-              <GrAnnounce />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <GrAnnounce className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
                   Community Announcements
                 </h3>
-                <p className="text-gray-700 ">
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
               </div>
             </div>
-            <div className=" flex items-center justify-center ">
-              <FaTasks />
-              <div className="desc w-2/3">
-                <h3 className="text-lg font-semibold">Task Management</h3>
-                <p className="text-gray-700 ">
+            <div className="flex items-center justify-center w-full gap-2 sm:gap-4 mb-2 sm:mb-4">
+              <FaTasks className="text-yellow-400 w-6 h-6 sm:w-10 sm:h-10" />
+              <div className="desc w-2/3 flex flex-col justify-center items-start">
+                <h3 className="text-xs sm:text-lg font-semibold">
+                  Task Management
+                </h3>
+                <p className="text-gray-700 text-xs sm:text-base">
                   Log complaints, track their progress, and communicate
                   seamlessly with management.
                 </p>
@@ -131,37 +143,43 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="footer bg-black w-full flex justify-center items-center py-10">
-        <div className="w-3/4 flex justify-between items-center gap-10">
-          <div className="w-1/3 flex flex-col justify-start items-left text-white">
-            <h1>Cee Towers</h1>
-            <p>
+      <div className="footer bg-black w-full flex justify-center items-center py-4 sm:py-10 border-t border-gray-800 mt-4">
+        <div className="w-11/12 sm:w-3/4 flex sm:flex-row justify-start items-start sm:items-start gap-2 sm:gap-10">
+          <div className="w-full sm:w-1/3 flex flex-col justify-start items-start sm:items-start text-white mb-2 sm:mb-0 text-center sm:text-left text-xs sm:text-base">
+            <h1 className="text-xs sm:text-lg font-bold mb-1 sm:mb-2">
+              Cee Towers
+            </h1>
+            <p className="text-xs sm:text-base text-start">
               Cee Towers is a modern residential complex located in the heart of
               the city. It is a 10-storey building with 100 units.
             </p>
           </div>
-          <div className="w-1/3 justify-between items-center text-white">
-            <h1>Quick Links</h1>
-            <ul>
+          <div className="w-full sm:w-1/3 flex flex-col justify-center items-start sm:items-start text-white mb-2 sm:mb-0 text-center sm:text-left text-xs sm:text-base">
+            <h1 className="text-xs sm:text-lg font-bold mb-1 sm:mb-2 text-start">
+              Quick Links
+            </h1>
+            <ul className="text-xs sm:text-base flex flex-col gap-1 text-start justify-start items-start">
               <li>Home</li>
               <li>About</li>
               <li>Contact</li>
             </ul>
           </div>
-          <div className="w-1/3 justify-between items-center text-white">
-            <h1>Contact Us</h1>
-            <div className="flex items-center gap-2">
+          <div className="w-full sm:w-1/3 flex flex-col justify-center items-start sm:items-start text-white text-center sm:text-left text-xs sm:text-base">
+            <h1 className="text-xs sm:text-lg font-bold mb-1 sm:mb-2">
+              Contact Us
+            </h1>
+            <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start text-xs sm:text-base mb-1">
               <FaPhoneSquareAlt />
               <p>+91 9884580300</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 justify-center sm:justify-start text-xs sm:text-base">
               <FaEnvelope />
               <p>info@ceetowers.com</p>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
