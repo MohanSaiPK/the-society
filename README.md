@@ -2,7 +2,7 @@
 
 > A modern, full-featured community management platform for residential societies.
 
-**The Society** helps residents, guards, service providers, and society admins stay connected and efficient by offering role-based dashboards for communication, service booking, complaint resolution, visitor management, and emergencies — all in one place.
+**The Society** helps residents, guards, service providers, and society admins stay connected and efficient by offering role-based dashboards for communication, service booking, complaint resolution, visitor management, and emergencies. All in one place.
 
 ---
 
