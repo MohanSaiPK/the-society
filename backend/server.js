@@ -12,6 +12,11 @@ import visitorLogRoutes from "./routes/visitorLog.js";
 import bookingRoutes from "./routes/booking.js";
 
 dotenv.config();
+console.log(
+  "✅ Loaded MONGO_URI:",
+  process.env.MONGO_URI ? "Present" : "Missing"
+);
+console.log("🔍 MONGO_URI value:", process.env.MONGO_URI);
 
 const app = express();
 app.use(
@@ -29,22 +34,29 @@ app.use(express.json());
 
 // Use environment variable or fallback to local MongoDB
 const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/society";
-
-mongoose
-  .connect(mongoURI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
-app.use("/api/auth", authRoutes);
-app.use("/api/complaints", complaintRoutes);
-app.use("/api/gatepass", gatepassRoutes);
-app.use("/api/announcements", announcementRoutes);
-app.use("/api/sos", sosRoutes);
-app.use("/api/polls", pollRoutes);
-app.use("/api/visitorlog", visitorLogRoutes);
-app.use("/api/bookings", bookingRoutes);
-
-app.get("/", (req, res) => res.send("API running"));
-
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose
+  .connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000,
+  })
+  .then(() => {
+    console.log("✅ MongoDB connected");
+
+    app.use("/api/auth", authRoutes);
+    app.use("/api/complaints", complaintRoutes);
+    app.use("/api/gatepass", gatepassRoutes);
+    app.use("/api/announcements", announcementRoutes);
+    app.use("/api/sos", sosRoutes);
+    app.use("/api/polls", pollRoutes);
+    app.use("/api/visitorlog", visitorLogRoutes);
+    app.use("/api/bookings", bookingRoutes);
+
+    app.get("/", (req, res) => res.send("API running"));
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  });
